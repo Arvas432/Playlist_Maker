@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_screen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/settings_header"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:layout_marginEnd="52dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin">
+        <ImageButton
+            android:layout_width= "wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/small_margin"
+            android:backgroundTint="@color/white"
+            android:src = "@drawable/back_icon"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="@dimen/medium_margin"
+            android:fontFamily="YS Display"
+            android:gravity="top"
+            android:lineHeight="26dp"
+            android:text="@string/settings"
+            android:textAppearance="@style/title"
+            />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/settings_body"
+            android:layout_marginTop="@dimen/settings_vertical_margin_top"
+            android:layout_marginBottom="@dimen/settings_vertical_margin_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/extra_large_margin"
+            android:text="@string/dark_theme" />
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="11dp"/>
+    </FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/settings_body"
+            android:layout_marginTop="@dimen/settings_vertical_margin_top"
+            android:layout_marginBottom="@dimen/settings_vertical_margin_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/extra_large_margin"
+            android:text="@string/share_app" />
+        <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/share_icon"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/settings_vertical_margin_top"
+            android:layout_marginBottom="@dimen/settings_vertical_margin_bottom"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:layout_marginLeft="6dp"
+            />
+    </FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/settings_body"
+            android:layout_marginTop="@dimen/settings_vertical_margin_top"
+            android:layout_marginBottom="@dimen/settings_vertical_margin_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/extra_large_margin"
+            android:text="@string/share_app" />
+        <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/tech_support"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/settings_vertical_margin_top"
+            android:layout_marginBottom="@dimen/settings_vertical_margin_bottom"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:layout_marginLeft="6dp"
+            />
+    </FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/settings_body"
+            android:layout_marginTop="@dimen/settings_vertical_margin_top"
+            android:layout_marginBottom="@dimen/settings_vertical_margin_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/extra_large_margin"
+            android:text="@string/TOS" />
+        <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/tos_button"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/settings_vertical_margin_top"
+            android:layout_marginBottom="@dimen/settings_vertical_margin_bottom"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:layout_marginLeft="6dp"
+            />
+    </FrameLayout>
+
+</LinearLayout>
