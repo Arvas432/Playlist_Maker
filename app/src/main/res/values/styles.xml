@@ -13,6 +13,7 @@
     <style name="title_black">
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/yp_black</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
     </style>
     <style name="settings_body">
         <item name="android:textSize">16sp</item>

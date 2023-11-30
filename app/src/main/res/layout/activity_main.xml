@@ -15,7 +15,7 @@
         android:layout_marginEnd="52dp"
         android:layout_marginTop="@dimen/small_margin"
         android:layout_marginBottom="@dimen/small_margin"
-        android:layout_marginLeft="@dimen/small_margin">
+        android:layout_marginStart="@dimen/small_margin">
 
         <TextView
             android:id="@+id/title"
@@ -28,7 +28,8 @@
             android:gravity="top"
             android:lineHeight="26dp"
             android:text="@string/main_screen_title"
-            android:textAppearance="@style/title" />
+            android:textAppearance="@style/title"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -39,7 +40,7 @@
         android:paddingTop="@dimen/extra_large_margin"
         android:paddingBottom="20dp">
 
-        <LinearLayout
+        <Button
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:id="@+id/search_button_layout"
@@ -52,68 +53,47 @@
             android:textAppearance="@style/body"
             app:icon = "@drawable/search_icon"
             app:iconTint = "@color/yp_black"
+            app:iconTintMode = "src_atop"
             app:iconGravity = "textStart"
-            android:gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/search"
-                android:textAppearance="@style/body"
-                android:drawableLeft="@drawable/search_icon"
-                android:layout_gravity="center"/>
-
-        </LinearLayout>
-
-        <LinearLayout
+            style="@style/body"
+            android:text="@string/search" />
+        <Button
             android:layout_width="match_parent"
-            android:clickable="true"
             android:orientation="vertical"
             android:id="@+id/playlist_button_layout"
             app:backgroundTint="@color/white"
             android:layout_height="0dp"
+            android:clickable="true"
             android:layout_weight="1"
             android:background="@drawable/button_big"
             android:layout_marginVertical="@dimen/main_activity_buttons_margin"
             android:textAppearance="@style/body"
-            app:icon = "@drawable/search_icon"
+            app:icon = "@drawable/playlist_icon"
             app:iconTint = "@color/yp_black"
+            app:iconTintMode = "src_atop"
             app:iconGravity = "textStart"
-            android:gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/media"
-                android:textAppearance="@style/body"
-                android:drawableLeft="@drawable/playlist_icon"
-                android:layout_gravity="center"/>
-
-        </LinearLayout>
-
-
-        <LinearLayout
+            android:gravity="center"
+            android:text="@string/media"
+            style="@style/body"/>
+        <Button
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:id="@+id/settings_button_layout"
             app:backgroundTint="@color/white"
-            android:clickable="true"
             android:layout_height="0dp"
+            android:clickable="true"
             android:layout_weight="1"
             android:background="@drawable/button_big"
             android:layout_marginVertical="@dimen/main_activity_buttons_margin"
             android:textAppearance="@style/body"
-            app:icon = "@drawable/search_icon"
+            app:icon="@drawable/settings_icon"
             app:iconTint = "@color/yp_black"
+            app:iconTintMode = "src_atop"
             app:iconGravity = "textStart"
-            android:gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/settings"
-                android:textAppearance="@style/body"
-                android:drawableLeft="@drawable/settings_icon"
-                android:layout_gravity="center"/>
+            android:gravity="center"
+            android:text="@string/settings"
+            style="@style/body"/>
 
-        </LinearLayout>
 
     </LinearLayout>
 

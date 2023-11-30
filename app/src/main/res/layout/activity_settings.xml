@@ -16,30 +16,30 @@
         android:layout_marginBottom="@dimen/small_margin"
         android:layout_marginStart="@dimen/small_margin">
         <ImageButton
+            android:id="@+id/back_button"
             android:layout_width= "wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/small_margin"
             android:backgroundTint="@color/white"
             android:src = "@drawable/back_icon"/>
-
         <TextView
-            android:id="@+id/title"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/medium_margin"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="@dimen/medium_margin"
-            android:fontFamily="YS Display"
-            android:gravity="top"
-            android:lineHeight="26dp"
             android:text="@string/settings"
-            android:textAppearance="@style/title"
-            />
+            android:layout_marginTop="@dimen/large_margin"
+            android:layout_marginBottom="@dimen/medium_margin"
+            android:textAppearance="@style/title_black"
+            android:gravity="top"
+            android:lineHeight="26dp" />
+
+
+
     </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="61dp"
+        android:layout_height="64dp"
         android:orientation="horizontal">
 
         <TextView
@@ -50,17 +50,19 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/extra_large_margin"
             android:text="@string/dark_theme" />
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
+            android:track="@color/yp_light_gray"
+            android:thumbTint="@color/yp_text_gray"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="6dp"
             android:layout_marginBottom="11dp"/>
     </FrameLayout>
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="61dp"
+        android:layout_height="64dp"
         android:orientation="horizontal">
 
         <TextView
@@ -84,7 +86,7 @@
     </FrameLayout>
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="61dp"
+        android:layout_height="64dp"
         android:orientation="horizontal">
 
         <TextView
@@ -108,7 +110,7 @@
     </FrameLayout>
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="61dp"
+        android:layout_height="64dp"
         android:orientation="horizontal">
 
         <TextView
@@ -118,7 +120,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/extra_large_margin"
-            android:text="@string/TOS" />
+            android:text="@string/terms_of_service" />
         <ImageView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
