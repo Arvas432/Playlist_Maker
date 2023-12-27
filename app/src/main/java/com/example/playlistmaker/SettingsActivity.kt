@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SwitchCompat
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,6 +17,18 @@ class SettingsActivity : AppCompatActivity() {
         val shareButton = findViewById<FrameLayout>(R.id.share_button)
         val techSupportButton = findViewById<FrameLayout>(R.id.tech_support_button)
         val termsOfServiceButton = findViewById<FrameLayout>(R.id.terms_of_service_button)
+        val nightModeSwitch = findViewById<SwitchCompat>(R.id.night_mode_switch)
+        nightModeSwitch.setOnClickListener {
+
+        }
+
+        nightModeSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (buttonView?.isChecked == true) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
         backButton.setOnClickListener {
             finish()
         }
