@@ -1,18 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="?attr/colorSecondary"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/panel_header"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginEnd="52dp"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/title"
+            android:layout_marginStart="@dimen/extra_large_margin"
+            android:text="@string/main_screen_title"
+            style="@style/title"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/extra_large_margin"
+        android:paddingTop="@dimen/extra_large_margin"
+        android:paddingBottom="20dp">
+
+        <Button
+            app:icon = "@drawable/search_icon"
+            android:id="@+id/search_button_layout"
+            style="@style/main_screen_buttons"
+            android:text="@string/search" />
+        <Button
+            app:icon = "@drawable/playlist_icon"
+            android:id="@+id/playlist_button_layout"
+            style="@style/main_screen_buttons"
+            android:text="@string/media" />
+        <Button
+            app:icon = "@drawable/settings_icon"
+            android:id="@+id/settings_button_layout"
+            style="@style/main_screen_buttons"
+            android:text="@string/settings"
+            />
+
+
+    </LinearLayout>
+
+</LinearLayout>

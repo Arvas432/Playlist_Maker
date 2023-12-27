@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_screen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
+
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/settings_header"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:layout_marginEnd="52dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin">
+        <ImageButton
+
+            android:id="@+id/back_button"
+            android:layout_width= "wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/small_margin"
+            android:backgroundTint="?attr/colorPrimary"
+            android:src = "@drawable/back_icon"
+            app:tint="?attr/colorOnPrimary" />
+        <TextView
+            android:layout_marginStart="@dimen/medium_margin"
+            android:text="@string/settings"
+            style="@style/title_black" />
+
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/settings_body"
+            android:text="@string/dark_theme" />
+        <androidx.appcompat.widget.SwitchCompat
+            style="@style/switch_style_settings"/>
+    </FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:id="@+id/share_button"
+        android:layout_height="64dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/settings_body"
+            android:text="@string/share_app" />
+        <ImageView
+            style="@style/settings_icons"
+            android:src="@drawable/share_icon"
+            />
+    </FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:id="@+id/tech_support_button"
+        android:layout_height="64dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/settings_body"
+            android:text="@string/message_support" />
+        <ImageView
+            style="@style/settings_icons"
+            android:src="@drawable/tech_support"
+            />
+    </FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:id="@+id/terms_of_service_button"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/settings_body"
+            android:text="@string/terms_of_service" />
+        <ImageView
+            style="@style/settings_icons"
+            android:src="@drawable/tos_button"
+            />
+    </FrameLayout>
+
+</LinearLayout>
