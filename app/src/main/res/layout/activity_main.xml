@@ -4,8 +4,7 @@
     android:id="@+id/main_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_blue"
-    android:clipToOutline="true"
+    android:background="?attr/colorSecondary"
     android:orientation="vertical">
 
     <LinearLayout
@@ -19,16 +18,9 @@
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="26dp"
             android:layout_marginStart="@dimen/extra_large_margin"
-            android:layout_marginTop="@dimen/large_margin"
-            android:layout_marginBottom="@dimen/medium_margin"
-            android:fontFamily="YS Display"
-            android:gravity="top"
-            android:lineHeight="26dp"
             android:text="@string/main_screen_title"
-            android:textAppearance="@style/title"
+            style="@style/title"
             />
     </LinearLayout>
 
@@ -41,58 +33,21 @@
         android:paddingBottom="20dp">
 
         <Button
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/search_button_layout"
-            app:backgroundTint="@color/white"
-            android:layout_height="0dp"
-            android:clickable="true"
-            android:layout_weight="1"
-            android:background="@drawable/button_big"
-            android:layout_marginVertical="@dimen/main_activity_buttons_margin"
-            android:textAppearance="@style/body"
             app:icon = "@drawable/search_icon"
-            app:iconTint = "@color/yp_black"
-            app:iconTintMode = "src_atop"
-            app:iconGravity = "textStart"
-            style="@style/body"
+            android:id="@+id/search_button_layout"
+            style="@style/main_screen_buttons"
             android:text="@string/search" />
         <Button
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/playlist_button_layout"
-            app:backgroundTint="@color/white"
-            android:layout_height="0dp"
-            android:clickable="true"
-            android:layout_weight="1"
-            android:background="@drawable/button_big"
-            android:layout_marginVertical="@dimen/main_activity_buttons_margin"
-            android:textAppearance="@style/body"
             app:icon = "@drawable/playlist_icon"
-            app:iconTint = "@color/yp_black"
-            app:iconTintMode = "src_atop"
-            app:iconGravity = "textStart"
-            android:gravity="center"
-            android:text="@string/media"
-            style="@style/body"/>
+            android:id="@+id/playlist_button_layout"
+            style="@style/main_screen_buttons"
+            android:text="@string/media" />
         <Button
-            android:layout_width="match_parent"
-            android:orientation="vertical"
+            app:icon = "@drawable/settings_icon"
             android:id="@+id/settings_button_layout"
-            app:backgroundTint="@color/white"
-            android:layout_height="0dp"
-            android:clickable="true"
-            android:layout_weight="1"
-            android:background="@drawable/button_big"
-            android:layout_marginVertical="@dimen/main_activity_buttons_margin"
-            android:textAppearance="@style/body"
-            app:icon="@drawable/settings_icon"
-            app:iconTint = "@color/yp_black"
-            app:iconTintMode = "src_atop"
-            app:iconGravity = "textStart"
-            android:gravity="center"
+            style="@style/main_screen_buttons"
             android:text="@string/settings"
-            style="@style/body"/>
+            />
 
 
     </LinearLayout>

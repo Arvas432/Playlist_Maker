@@ -1,7 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Theme.PlaylistMaker.Base" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/yp_black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/yp_black</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="tint">@color/white</item>
+        <item name="thumbTint">@color/main_blue</item>
+        <item name="trackTint">@color/yp_blue_light</item>
     </style>
 </resources>

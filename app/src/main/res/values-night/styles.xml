@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="switch_style_settings">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginEnd">6dp</item>
+        <item name="android:layout_marginBottom">11dp</item>
+        <item name="thumbTint">@color/main_blue</item>
+        <item name="trackTint">@color/yp_blue_light</item>
+    </style>
+    <style name="search_text_style">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColorHint">@color/yp_black</item>
+        <item name="drawableTint">@color/yp_black</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="tint">@color/yp_black</item>
+    </style>
+    <style name="clear_button_style">
+        <item name="android:tint">@color/yp_black</item>
+    </style>
+</resources>
