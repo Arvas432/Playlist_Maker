@@ -39,9 +39,8 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(shareIntent)
         }
         techSupportButton.setOnClickListener {
-            val techSupportIntent = Intent(Intent.ACTION_SEND)
+            val techSupportIntent = Intent(Intent.ACTION_SENDTO)
             techSupportIntent.data = Uri.parse("mailto:")
-            techSupportIntent.type = "message/rfc822"
             techSupportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.my_email)))
             techSupportIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject))
             techSupportIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.email_contents))
