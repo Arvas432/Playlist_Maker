@@ -43,6 +43,7 @@
             style="@style/settings_body"
             android:text="@string/dark_theme" />
         <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/night_mode_switch"
             style="@style/switch_style_settings"/>
     </FrameLayout>
     <FrameLayout
