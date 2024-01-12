@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="61dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:background="?attr/colorPrimary">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/track_image"
+        android:forceDarkAllowed="true"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="13dp"
+        tools:src = "@drawable/placeholder"
+        android:background="?attr/colorPrimary"
+        />
+    <TextView
+        android:id="@+id/track_title"
+        android:layout_width="match_parent"
+        android:layout_height="19dp"
+        android:layout_marginStart="66dp"
+        android:maxLines="1"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="44dp"
+        tools:text="Yesterday"
+        android:textAppearance="@style/track_title_style"
+        android:gravity="top"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="13dp"
+        android:layout_marginStart="66dp"
+        android:layout_marginTop="34dp"
+        android:layout_marginEnd="44dp"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:id="@+id/track_author"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            tools:text="The Beatles"
+            android:maxLines="5"
+            android:maxLength="40"
+            android:textAppearance="@style/track_subtext"/>
+        <ImageView
+            style="@style/track_dot"/>
+        <TextView
+            android:id="@+id/track_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            tools:text="2:55"
+            android:textAppearance="@style/track_subtext"/>
+
+    </LinearLayout>
+    <ImageView
+        style="@style/track_arrow"/>
+</FrameLayout>

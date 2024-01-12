@@ -36,21 +36,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingVertical="8dp">
+
         <EditText
             android:id="@+id/search_field_edittext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="8dp"
-            android:drawableStart="@drawable/search_icon"
-            android:drawablePadding="10dp"
-            android:hint="@string/search"
-            android:background="@drawable/search_field_background"
-            android:inputType="text"
-            android:maxLines="1"
-            android:maxLength="50"
-            style="@style/search_text_style"
-            android:paddingHorizontal="@dimen/medium_margin" />
+            style="@style/search_text_style" />
+
         <ImageView
             android:id="@+id/clear_button"
             android:layout_width="wrap_content"
@@ -58,11 +48,16 @@
             android:layout_gravity="center_vertical|end"
             android:src="@drawable/clear_icon"
             android:layout_marginEnd="28dp"
-            style="@style/search_text_style"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:tint="@color/clear_button_color" />
 
 
 
     </FrameLayout>
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/track_list_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/track_item_view"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 </LinearLayout>
