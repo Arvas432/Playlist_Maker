@@ -27,6 +27,7 @@
         android:textAppearance="@style/track_title_style"
         android:gravity="top"
         />
+    <!--я тут исправил в той итерации - добавил wrap content для Linear layout, weight и ellipsize для textview-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="13dp"
@@ -40,7 +41,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            tools:text="The Beatles"
+            tools:text="The Beatles AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
             android:ellipsize="end"
             android:lines="1"
             android:textAppearance="@style/track_subtext" />
@@ -50,9 +51,8 @@
             android:id="@+id/track_duration"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            tools:text="2:55"
+            tools:text="2:551111111111111111111"
             android:textAppearance="@style/track_subtext"/>
-
     </LinearLayout>
     <ImageView
         style="@style/track_arrow"/>
