@@ -21,13 +21,14 @@
         android:layout_height="19dp"
         android:layout_marginStart="66dp"
         android:maxLines="1"
+        android:ellipsize="end"
+        android:lines="1"
         android:layout_marginTop="14dp"
         android:layout_marginEnd="44dp"
-        tools:text="Yesterday"
+        tools:text="Here Comes The Sun (Remastered) еще текст чтобы проверить "
         android:textAppearance="@style/track_title_style"
         android:gravity="top"
         />
-    <!--я тут исправил в той итерации - добавил wrap content для Linear layout, weight и ellipsize для textview-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="13dp"
