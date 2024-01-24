@@ -10,14 +10,4 @@
         <item name="thumbTint">@color/main_blue</item>
         <item name="trackTint">@color/yp_blue_light</item>
     </style>
-    <style name="search_text_style">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColorHint">@color/yp_black</item>
-        <item name="drawableTint">@color/yp_black</item>
-        <item name="fontFamily">@font/ys_display_regular</item>
-        <item name="tint">@color/yp_black</item>
-    </style>
-    <style name="clear_button_style">
-        <item name="android:tint">@color/yp_black</item>
-    </style>
 </resources>
