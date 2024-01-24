@@ -39,25 +39,73 @@
 
         <EditText
             android:id="@+id/search_field_edittext"
-            style="@style/search_text_style" />
+            android:imeOptions = "actionDone"
+            style="@style/search_text_style"
+            />
 
         <ImageView
             android:id="@+id/clear_button"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
             android:src="@drawable/clear_icon"
-            android:layout_marginEnd="28dp"
+            android:layout_marginEnd="16dp"
             android:visibility="gone"
             app:tint="@color/clear_button_color" />
 
 
 
     </FrameLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/track_list_recyclerview"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/track_item_view"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/track_list_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/track_item_view"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            />
+        <LinearLayout
+            android:id="@+id/error_placeholder_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/error_placeholder_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="102dp"
+                android:src="@drawable/no_connection_placeholder"
+                />
+            <TextView
+                android:id="@+id/error_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:lineHeight="22sp"
+                android:textAppearance="@style/error_message"
+                android:textColor="?attr/colorOnPrimary"
+                android:layout_marginTop="@dimen/extra_large_margin"
+                android:text="@string/connection_problem"
+                />
+            <Button
+                android:id="@+id/refresh_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="?attr/colorOnPrimary"
+                android:layout_gravity="center"
+                android:textAppearance="@style/refresh_button_text"
+                android:textColor="?attr/colorPrimary"
+                android:text="@string/refresh"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="10dp"
+                app:cornerRadius="54dp"/>
+        </LinearLayout>
+    </FrameLayout>
+
 </LinearLayout>
