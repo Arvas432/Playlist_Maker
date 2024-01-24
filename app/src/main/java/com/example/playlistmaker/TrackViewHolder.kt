@@ -16,6 +16,7 @@ class TrackViewHolder(private val parent:ViewGroup,itemView: View = LayoutInflat
     private val trackImage: ImageView = itemView.findViewById(R.id.track_image)
     private val trackAuthor: TextView = itemView.findViewById(R.id.track_author)
     private val trackDuration: TextView = itemView.findViewById(R.id.track_duration)
+    private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
     fun bind(model: Track){
         trackName.text = model.trackName
         Glide.with(itemView)
@@ -25,6 +26,6 @@ class TrackViewHolder(private val parent:ViewGroup,itemView: View = LayoutInflat
             .transform(RoundedCorners(itemView.context.resources.getDimensionPixelSize(R.dimen.track_image_rounding)))
             .into(trackImage)
         trackAuthor.text = model.artistName.trim()
-        trackDuration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
+        trackDuration.text = dateFormat.format(model.trackTimeMillis)
     }
 }

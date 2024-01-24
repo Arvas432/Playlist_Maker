@@ -72,48 +72,46 @@ class SearchActivity : AppCompatActivity() {
                 inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
             }
         }
-        fun showNoResultsMessage(){
-            trackListRecyclerView.visibility = View.GONE
-            errorPlaceholderLayout.visibility = View.VISIBLE
-            errorImage.setImageResource(R.drawable.no_search_results_placeholder)
-            errorText.text = resources.getText(R.string.no_search_results)
-            errorRefreshButton.visibility = View.GONE
-        }
-        fun showNoConnectionMessage(){
-            trackListRecyclerView.visibility = View.GONE
-            errorRefreshButton.visibility = View.VISIBLE
-            errorPlaceholderLayout.visibility = View.VISIBLE
-            errorImage.setImageResource(R.drawable.no_connection_placeholder)
-            errorText.text = resources.getText(R.string.connection_problem)
-        }
         fun iTunesSearch(query: String) {
             if (query.isNotEmpty()) {
                 iTunesService.search(query).enqueue(object : Callback<ITunesResponse> {
                     override fun onResponse(call: Call<ITunesResponse>,
                                             response: Response<ITunesResponse>
                     ) {
-                        if (response.code() == 200) {
-                            if (response.body()?.results?.isNotEmpty() == true) {
+                        if (response.isSuccessful) {
+                            val results = response.body()?.results
+                            if(results!= null){
                                 tracks.clear()
-                                tracks.addAll(response.body()?.results!!)
-                                trackListAdapter.notifyDataSetChanged()
-                            }
-                            if (tracks.isEmpty()) {
-                                tracks.clear()
-                                trackListAdapter.notifyDataSetChanged()
-                                showNoResultsMessage()
-                            } else {
-                                errorPlaceholderLayout.visibility = View.GONE
-                                trackListRecyclerView.visibility = View.VISIBLE
+                                if (results.isEmpty()) {
+                                    trackListAdapter.notifyDataSetChanged()
+                                    trackListRecyclerView.visibility = View.GONE
+                                    errorPlaceholderLayout.visibility = View.VISIBLE
+                                    errorImage.setImageResource(R.drawable.no_search_results_placeholder)
+                                    errorText.text = resources.getText(R.string.no_search_results)
+                                    errorRefreshButton.visibility = View.GONE
+                                } else {
+                                    tracks.addAll(response.body()?.results!!)
+                                    trackListAdapter.notifyDataSetChanged()
+                                    errorPlaceholderLayout.visibility = View.GONE
+                                    trackListRecyclerView.visibility = View.VISIBLE
+                                }
                             }
                         } else {
                             lastSearch = query
-                            showNoConnectionMessage()
+                            trackListRecyclerView.visibility = View.GONE
+                            errorRefreshButton.visibility = View.VISIBLE
+                            errorPlaceholderLayout.visibility = View.VISIBLE
+                            errorImage.setImageResource(R.drawable.no_connection_placeholder)
+                            errorText.text = resources.getText(R.string.connection_problem)
                         }
                     }
                     override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
                         lastSearch = query
-                        showNoConnectionMessage()
+                        trackListRecyclerView.visibility = View.GONE
+                        errorRefreshButton.visibility = View.VISIBLE
+                        errorPlaceholderLayout.visibility = View.VISIBLE
+                        errorImage.setImageResource(R.drawable.no_connection_placeholder)
+                        errorText.text = resources.getText(R.string.connection_problem)
                     }
 
                 })
