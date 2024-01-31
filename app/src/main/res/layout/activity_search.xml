@@ -56,14 +56,36 @@
 
 
     </FrameLayout>
-
+        <TextView
+            android:id="@+id/search_history_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineHeight="22sp"
+            android:paddingHorizontal="@dimen/extra_large_margin"
+            android:paddingTop="18dp"
+            android:paddingBottom="12dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_horizontal"
+            android:textAppearance="@style/search_history_text"
+            android:text="@string/you_searched_for"
+            android:visibility="gone"
+            tools:visibility="visible"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/track_list_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             tools:listitem="@layout/track_item_view"
+            tools:itemCount="10"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             />
+        <Button
+            style="@style/rounded_button"
+            android:id="@+id/clear_history_button"
+            android:visibility="gone"
+            android:layout_marginTop="24dp"
+            android:text="@string/clear_history"
+            tools:visibility="visible"/>
         <LinearLayout
             android:id="@+id/error_placeholder_layout"
             android:layout_width="match_parent"
@@ -91,17 +113,9 @@
                 android:text="@string/connection_problem"
                 />
             <Button
+                style="@style/rounded_button"
                 android:id="@+id/refresh_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:backgroundTint="?attr/colorOnPrimary"
-                android:layout_gravity="center"
-                android:textAppearance="@style/refresh_button_text"
-                android:textColor="?attr/colorPrimary"
-                android:text="@string/refresh"
-                android:paddingHorizontal="14dp"
-                android:paddingVertical="10dp"
-                app:cornerRadius="54dp"/>
+                android:text="@string/refresh" />
         </LinearLayout>
 </LinearLayout>

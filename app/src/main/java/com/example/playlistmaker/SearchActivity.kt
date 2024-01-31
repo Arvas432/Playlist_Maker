@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -25,12 +26,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SearchActivity : AppCompatActivity() {
     private var searchData: String = SEARCH_DEF
     private val iTunesBaseUrl = "https://itunes.apple.com"
+    private var lastSearch: String = SEARCH_DEF
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesBaseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val iTunesService = retrofit.create(ITunesApi::class.java)
     private val tracks = ArrayList<Track>()
+    private val sharedPreferences = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+    private val searchHistory = SearchHistory(sharedPreferences)
+    private val searchHistoryTracks = searchHistory.read()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -43,7 +49,7 @@ class SearchActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
             searchData = savedInstanceState.getString(SEARCH_VALUE, SEARCH_DEF)
         }
-        var lastSearch = searchData
+        lastSearch = searchData
         searchTextField.setText(searchData)
         val clearButton = findViewById<ImageView>(R.id.clear_button)
         val searchFieldTextWatcher = object : TextWatcher{
@@ -90,7 +96,7 @@ class SearchActivity : AppCompatActivity() {
                                     errorText.text = resources.getText(R.string.no_search_results)
                                     errorRefreshButton.visibility = View.GONE
                                 } else {
-                                    tracks.addAll(response.body()?.results!!)
+                                    tracks.addAll(results)
                                     trackListAdapter.notifyDataSetChanged()
                                     errorPlaceholderLayout.visibility = View.GONE
                                     trackListRecyclerView.visibility = View.VISIBLE
@@ -142,6 +148,8 @@ class SearchActivity : AppCompatActivity() {
         searchData = savedInstanceState.getString(SEARCH_VALUE, SEARCH_DEF)
     }
     companion object {
+        const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
+        const val SEARCH_HISTORY_KEY = "search_history_key"
         const val SEARCH_VALUE = "SEARCH_VALUE"
         const val SEARCH_DEF = ""
     }
