@@ -57,7 +57,7 @@
 
     </FrameLayout>
         <TextView
-            android:id="@+id/search_history_header"
+            android:id="@+id/search_history_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lineHeight="22sp"
@@ -74,9 +74,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/track_list_recyclerview"
             android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             tools:listitem="@layout/track_item_view"
-            tools:itemCount="10"
+            tools:itemCount="3"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             />
         <Button
