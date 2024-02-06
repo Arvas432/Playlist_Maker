@@ -39,25 +39,84 @@
 
         <EditText
             android:id="@+id/search_field_edittext"
-            style="@style/search_text_style" />
+            android:imeOptions = "actionDone"
+            style="@style/search_text_style"
+            />
 
         <ImageView
             android:id="@+id/clear_button"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
             android:src="@drawable/clear_icon"
-            android:layout_marginEnd="28dp"
+            android:layout_marginEnd="16dp"
             android:visibility="gone"
             app:tint="@color/clear_button_color" />
 
 
 
     </FrameLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/track_list_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/track_item_view"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        <TextView
+            android:id="@+id/search_history_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineHeight="22sp"
+            android:paddingHorizontal="@dimen/extra_large_margin"
+            android:paddingTop="18dp"
+            android:paddingBottom="12dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_horizontal"
+            android:textAppearance="@style/search_history_text"
+            android:text="@string/you_searched_for"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/track_list_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/track_item_view"
+            tools:itemCount="3"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            />
+        <Button
+            style="@style/rounded_button"
+            android:id="@+id/clear_history_button"
+            android:visibility="gone"
+            android:layout_marginTop="24dp"
+            android:text="@string/clear_history"
+            tools:visibility="visible"/>
+        <LinearLayout
+            android:id="@+id/error_placeholder_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/error_placeholder_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="102dp"
+                android:src="@drawable/no_connection_placeholder"
+                />
+            <TextView
+                android:id="@+id/error_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:lineHeight="22sp"
+                android:textAppearance="@style/error_message"
+                android:textColor="?attr/colorOnPrimary"
+                android:layout_marginTop="@dimen/extra_large_margin"
+                android:text="@string/connection_problem"
+                />
+            <Button
+                style="@style/rounded_button"
+                android:id="@+id/refresh_button"
+                android:layout_marginTop="24dp"
+                android:text="@string/refresh" />
+        </LinearLayout>
 </LinearLayout>
