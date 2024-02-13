@@ -7,7 +7,8 @@
         <item name="colorSecondary">@color/main_blue</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="android:statusBarColor">?attr/colorSecondary</item>
-
+        <item name="colorSwitchThumbNormal">@color/yp_text_gray</item>
+        <item name="colorSurface">@color/yp_light_gray</item>
 
     </style>
 

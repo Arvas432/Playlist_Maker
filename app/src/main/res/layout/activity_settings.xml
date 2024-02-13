@@ -29,64 +29,35 @@
             android:layout_marginStart="@dimen/medium_margin"
             android:text="@string/settings"
             style="@style/title_black" />
-
-
-
     </LinearLayout>
-
-    <FrameLayout
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/night_mode_switch"
+        android:text="@string/dark_theme"
+        android:fontFamily="@font/ys_display_regular"
+        app:thumbTint="?attr/colorSwitchThumbNormal"
+        app:trackTint="?attr/colorSurface"
+        android:textSize="16sp"
+        android:textColor="?attr/colorOnPrimary"
+        android:lineHeight="19sp"
+        android:paddingStart="16dp"
+        android:paddingEnd="6dp"
+        android:layout_gravity="start"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/settings_body"
-            android:text="@string/dark_theme" />
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/night_mode_switch"
-            style="@style/switch_style_settings"/>
-    </FrameLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
+        android:layout_height="64dp"/>
+    <TextView
+        style="@style/settings_body"
         android:id="@+id/share_button"
-        android:layout_height="64dp"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/settings_body"
-            android:text="@string/share_app" />
-        <ImageView
-            style="@style/settings_icons"
-            android:src="@drawable/share_icon"
-            />
-    </FrameLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
+        android:text="@string/share_app"
+        app:drawableEndCompat="@drawable/share_icon" />
+    <TextView
+        style="@style/settings_body"
         android:id="@+id/tech_support_button"
-        android:layout_height="64dp"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/settings_body"
-            android:text="@string/message_support" />
-        <ImageView
-            style="@style/settings_icons"
-            android:src="@drawable/tech_support"
-            />
-    </FrameLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:text="@string/message_support"
+        app:drawableEndCompat="@drawable/tech_support"/>
+    <TextView
+        style="@style/settings_body"
         android:id="@+id/terms_of_service_button"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/settings_body"
-            android:text="@string/terms_of_service" />
-        <ImageView
-            style="@style/settings_icons"
-            android:src="@drawable/tos_button"
-            />
-    </FrameLayout>
+        android:text="@string/terms_of_service"
+        app:drawableEndCompat="@drawable/tos_button"/>
 
 </LinearLayout>
