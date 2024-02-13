@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -38,6 +37,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistory :SearchHistory
     private lateinit var searchHistoryTracks: List<Track>
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -54,10 +54,9 @@ class SearchActivity : AppCompatActivity() {
         val searchHistoryTextView = findViewById<TextView>(R.id.search_history_textview)
         if (savedInstanceState != null) {
             searchData = savedInstanceState.getString(SEARCH_VALUE, SEARCH_DEF)
+            lastSearch = savedInstanceState.getString(LAST_SEARCH, searchData)
         }
-        lastSearch = searchData
         searchTextField.setText(searchData)
-
         val clearButton = findViewById<ImageView>(R.id.clear_button)
         val trackListRecyclerView = findViewById<RecyclerView>(R.id.track_list_recyclerview)
         val trackListAdapter = TrackListAdapter(tracks, searchHistory)
@@ -69,16 +68,15 @@ class SearchActivity : AppCompatActivity() {
             clearHistoryButton.visibility = View.GONE
             searchHistoryTextView.visibility = View.GONE
         }
-        sharedPreferences.registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
-            searchHistoryTracks = searchHistory.read()
-        }
         val searchFieldTextWatcher = object : TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchHistoryTracks = searchHistory.read()
                 if (s.isNullOrEmpty()){
                     if(searchTextField.hasFocus() && searchTextField.text.isEmpty() && searchHistoryTracks.isNotEmpty()){
                         clearHistoryButton.visibility = View.VISIBLE
                         searchHistoryTextView.visibility = View.VISIBLE
+                        errorPlaceholderLayout.visibility = View.GONE
                         tracks.clear()
                         tracks.addAll(searchHistoryTracks)
                         trackListAdapter.notifyDataSetChanged()
@@ -104,6 +102,7 @@ class SearchActivity : AppCompatActivity() {
         }
         searchTextField.addTextChangedListener(searchFieldTextWatcher)
         searchTextField.setOnFocusChangeListener { _, hasFocus ->
+            searchHistoryTracks = searchHistory.read()
             if(hasFocus && searchTextField.text.isEmpty() && searchHistoryTracks.isNotEmpty()){
                 clearHistoryButton.visibility = View.VISIBLE
                 searchHistoryTextView.visibility = View.VISIBLE
@@ -192,14 +191,17 @@ class SearchActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle){
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_VALUE, searchData)
+        outState.putString(LAST_SEARCH, lastSearch)
     }
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         searchData = savedInstanceState.getString(SEARCH_VALUE, SEARCH_DEF)
+        lastSearch = savedInstanceState.getString(LAST_SEARCH, searchData)
     }
     companion object {
         const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
         const val SEARCH_VALUE = "SEARCH_VALUE"
         const val SEARCH_DEF = ""
+        const val LAST_SEARCH = "LAST_SEARCH"
     }
 }

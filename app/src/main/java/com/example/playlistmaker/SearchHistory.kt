@@ -1,7 +1,6 @@
 package com.example.playlistmaker
 
 import android.content.SharedPreferences
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -18,7 +17,6 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
             .edit()
             .putString(SEARCH_HISTORY_KEY, Gson().toJson(currentSearchHistory))
             .apply()
-        Log.i("search history", "Track ${input.trackName} is saved")
     }
     fun clear(){
         sharedPreferences
