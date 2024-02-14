@@ -4,11 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.SwitchCompat
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
@@ -16,7 +13,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
-        val backButton = findViewById<ImageButton>(R.id.back_button)
+        val backButton = findViewById<ImageButton>(R.id.back_btn)
         val shareButton = findViewById<TextView>(R.id.share_button)
         val techSupportButton = findViewById<TextView>(R.id.tech_support_button)
         val termsOfServiceButton = findViewById<TextView>(R.id.terms_of_service_button)
@@ -43,7 +40,7 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
         shareButton.setOnClickListener {
-            val shareIntent = Intent(Intent.ACTION_SEND);
+            val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_link))
             shareIntent.type = "text/plain"
             startActivity(shareIntent)

@@ -9,4 +9,7 @@
     <dimen name="settings_start_margin">6dp</dimen>
     <dimen name="main_activity_buttons_margin">2dp</dimen>
     <dimen name="track_image_rounding">2dp</dimen>
+    <dimen name="player_track_image_rounding">8dp</dimen>
+    <dimen name="player_large_margin">24dp</dimen>
+    <dimen name="player_medium_margin">16dp</dimen>
 </resources>
