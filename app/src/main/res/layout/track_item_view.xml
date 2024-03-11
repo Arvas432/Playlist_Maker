@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:background="?attr/colorPrimary">
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/track_image"
+        android:id="@+id/track_image_iv"
         android:forceDarkAllowed="true"
         android:layout_width="45dp"
         android:layout_height="45dp"

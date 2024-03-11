@@ -13,7 +13,7 @@ import java.util.Locale
 
 class TrackViewHolder(private val parent:ViewGroup,itemView: View = LayoutInflater.from(parent.context).inflate(R.layout.track_item_view, parent, false)): RecyclerView.ViewHolder(itemView){
     private val trackName: TextView = itemView.findViewById(R.id.track_title)
-    private val trackImage: ImageView = itemView.findViewById(R.id.track_image)
+    private val trackImage: ImageView = itemView.findViewById(R.id.track_image_iv)
     private val trackAuthor: TextView = itemView.findViewById(R.id.track_author)
     private val trackDuration: TextView = itemView.findViewById(R.id.track_duration)
     private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }

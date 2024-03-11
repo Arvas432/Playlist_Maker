@@ -44,7 +44,7 @@ class SearchActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPreferences)
         searchHistoryTracks = searchHistory.read()
-        val backButton = findViewById<ImageButton>(R.id.back_button)
+        val backButton = findViewById<ImageButton>(R.id.back_btn)
         val searchTextField = findViewById<EditText>(R.id.search_field_edittext)
         val errorPlaceholderLayout = findViewById<LinearLayout>(R.id.error_placeholder_layout)
         val errorImage = findViewById<ImageView>(R.id.error_placeholder_image)
