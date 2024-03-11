@@ -52,7 +52,7 @@
             android:id="@+id/track_duration"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            tools:text="2:551111111111111111111"
+            tools:text="2:551111111111"
             android:textAppearance="@style/track_subtext"/>
     </LinearLayout>
     <ImageView
