@@ -1,6 +1,6 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.data.dto
 
-data class Track(
+data class TrackDto(
     val trackId: Int,
     val trackName: String,
     val artistName: String,
@@ -10,5 +10,5 @@ data class Track(
     val releaseDate: String,
     val primaryGenreName: String,
     val country: String,
-    val previewUrl: String
-)
+    val previewUrl: String) {
+}

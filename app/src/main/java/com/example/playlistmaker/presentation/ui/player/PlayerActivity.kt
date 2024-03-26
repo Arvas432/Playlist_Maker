@@ -1,6 +1,5 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui.player
 
-import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -11,19 +10,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
-    private var playerState = PLAYER_STATE_DEFAULT
-    private var mediaPlayer = MediaPlayer()
+    private var mediaPlayerInteractor = Creator.provideMediaPlayerInteractor()
     private var handler = Handler(Looper.getMainLooper())
-    private val playerTimeFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
     private var timerRunnable = object:Runnable {
         override fun run() {
-            if(playerState == PLAYER_STATE_PLAYING){
-                trackDurationTV.text = playerTimeFormat.format(mediaPlayer.currentPosition)
+            if(mediaPlayerInteractor.getPlayerState() == PLAYER_STATE_PLAYING){
+                trackDurationTV.text = mediaPlayerInteractor.getCurrentPosFormatted()
                 handler.postDelayed(this, TIMER_DELAY)
             }
         }
@@ -34,7 +32,6 @@ class PlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
-        val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
         val track = Gson().fromJson(intent.getStringExtra(TRACK_PLAYER_KEY), Track::class.java)
         val trackIV = findViewById<ImageView>(R.id.track_image_iv)
         val trackTitleTV = findViewById<TextView>(R.id.track_title_tv)
@@ -56,8 +53,9 @@ class PlayerActivity : AppCompatActivity() {
             .into(trackIV)
         trackTitleTV.text = track.trackName
         trackAuthorTV.text = track.artistName
-        durationInfoTV.text = dateFormat.format(track.trackTimeMillis)
+        durationInfoTV.text = track.trackTimeMillis
         preparePLayer(track.previewUrl)
+
         mediaControlButton.setOnClickListener {
             playbackControl()
         }
@@ -84,10 +82,10 @@ class PlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(timerRunnable)
-        mediaPlayer.release()
+        mediaPlayerInteractor.releasePlayer()
     }
     private fun playbackControl(){
-        when(playerState){
+        when(mediaPlayerInteractor.getPlayerState()){
             PLAYER_STATE_PLAYING -> {
                 pausePlayer()
             }
@@ -97,33 +95,27 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
     private fun preparePLayer(url: String){
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playerState = PLAYER_STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
+        mediaPlayerInteractor.preparePlayer(url)
+        mediaPlayerInteractor.setCompletionListener {
+            handler.removeCallbacks(timerRunnable)
             mediaControlButton.setImageResource(R.drawable.play_button)
-            playerState = PLAYER_STATE_PREPARED
             trackDurationTV.text = resources.getText(R.string.track_duration_placeholder)
         }
+
     }
     private fun startPlayer(){
-        mediaPlayer.start()
+        mediaPlayerInteractor.play()
         mediaControlButton.setImageResource(R.drawable.pause_button)
-        playerState = PLAYER_STATE_PLAYING
         handler.post(timerRunnable)
     }
     private fun pausePlayer(){
-        mediaPlayer.pause()
+        mediaPlayerInteractor.pause()
         mediaControlButton.setImageResource(R.drawable.play_button)
-        playerState = PLAYER_STATE_PAUSED
         handler.removeCallbacks(timerRunnable)
     }
     companion object{
         const val TRACK_PLAYER_KEY = "TRACK_PLAYER_KEY"
         const val TIMER_DELAY = 300L
-        const val PLAYER_STATE_DEFAULT = 0
         const val PLAYER_STATE_PREPARED = 1
         const val PLAYER_STATE_PLAYING = 2
         const val PLAYER_STATE_PAUSED = 3
