@@ -20,6 +20,7 @@ class TracksInteractorImpl(private val repository: TracksRepository): TracksInte
                         consumer.consume(TracksSearchResult(emptyList(), SearchResultType.EMPTY))
                     }
                 }catch (e: Throwable){
+                    e.printStackTrace()
                     consumer.consume(TracksSearchResult(emptyList(), SearchResultType.ERROR))
                 }
 

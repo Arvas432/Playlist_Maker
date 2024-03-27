@@ -21,7 +21,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient): TracksRepo
                     it.artworkUrl100,
                     it.collectionName,
                     it.releaseDate,
-                    it.primaryGenreName,
+                    it.primaryGenreName ?: "",
                     it.country,
                     it.previewUrl
                 ) }

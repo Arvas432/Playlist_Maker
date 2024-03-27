@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
+import com.example.playlistmaker.data.mediaPlayer.AndroidMediaPlayerHandler
 import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 
@@ -20,7 +21,7 @@ class PlayerActivity : AppCompatActivity() {
     private var handler = Handler(Looper.getMainLooper())
     private var timerRunnable = object:Runnable {
         override fun run() {
-            if(mediaPlayerInteractor.getPlayerState() == PLAYER_STATE_PLAYING){
+            if(mediaPlayerInteractor.getPlayerState() == AndroidMediaPlayerHandler.PLAYER_STATE_PLAYING){
                 trackDurationTV.text = mediaPlayerInteractor.getCurrentPosFormatted()
                 handler.postDelayed(this, TIMER_DELAY)
             }
@@ -86,10 +87,10 @@ class PlayerActivity : AppCompatActivity() {
     }
     private fun playbackControl(){
         when(mediaPlayerInteractor.getPlayerState()){
-            PLAYER_STATE_PLAYING -> {
+            AndroidMediaPlayerHandler.PLAYER_STATE_PLAYING -> {
                 pausePlayer()
             }
-            PLAYER_STATE_PREPARED, PLAYER_STATE_PAUSED -> {
+            AndroidMediaPlayerHandler.PLAYER_STATE_PREPARED, AndroidMediaPlayerHandler.PLAYER_STATE_PAUSED -> {
                 startPlayer()
             }
         }
@@ -116,8 +117,5 @@ class PlayerActivity : AppCompatActivity() {
     companion object{
         const val TRACK_PLAYER_KEY = "TRACK_PLAYER_KEY"
         const val TIMER_DELAY = 300L
-        const val PLAYER_STATE_PREPARED = 1
-        const val PLAYER_STATE_PLAYING = 2
-        const val PLAYER_STATE_PAUSED = 3
     }
 }
