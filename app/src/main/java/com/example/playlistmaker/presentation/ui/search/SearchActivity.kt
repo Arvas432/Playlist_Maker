@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui.search
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -20,26 +20,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.LocalStorage.SearchHistory
+import com.example.playlistmaker.domain.api.TracksInteractor
+import com.example.playlistmaker.domain.models.SearchResultType
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.models.TracksSearchResult
+
 
 
 class SearchActivity : AppCompatActivity() {
+    private var tracksInteractor = Creator.provideTracksInteractor()
     private var searchData: String = SEARCH_DEF
-    private val iTunesBaseUrl = "https://itunes.apple.com"
     private var lastSearch: String = SEARCH_DEF
     private var searchFieldEmpty: Boolean = true
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(iTunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val iTunesService = retrofit.create(ITunesApi::class.java)
     private var tracks = ArrayList<Track>()
-    private lateinit var sharedPreferences:SharedPreferences
-    private lateinit var searchHistory :SearchHistory
+    private lateinit var sharedPreferences : SharedPreferences
+    private lateinit var searchHistory : SearchHistory
     private lateinit var searchHistoryTracks: List<Track>
     private lateinit var trackListAdapter: TrackListAdapter
     private lateinit var trackListRecyclerView: RecyclerView
@@ -167,57 +165,61 @@ class SearchActivity : AppCompatActivity() {
     }
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable, SEARCH_RUNNABLE_TOKEN)
-        handler.postDelayed(searchRunnable ,SEARCH_RUNNABLE_TOKEN, SEARCH_DEBOUNCE_DELAY)
+        handler.postDelayed(searchRunnable , SEARCH_RUNNABLE_TOKEN, SEARCH_DEBOUNCE_DELAY)
+    }
+    private fun setNetworkErrorScreenState(){
+        loadingProgressBar.isVisible = false
+        trackListRecyclerView.visibility = View.GONE
+        loadingProgressBar.isVisible=false
+        errorRefreshButton.visibility = View.VISIBLE
+        errorPlaceholderLayout.visibility = View.VISIBLE
+        errorImage.setImageResource(R.drawable.no_connection_placeholder)
+        errorText.text = resources.getText(R.string.connection_problem)
+    }
+    private fun setLoadingScreenState(){
+        loadingProgressBar.isVisible=true
+        errorPlaceholderLayout.isVisible=false
+        trackListRecyclerView.isVisible=false
+    }
+    private fun setEmptyResultsScreenState(){
+        loadingProgressBar.isVisible = false
+        trackListRecyclerView.isVisible = false
+        errorPlaceholderLayout.isVisible = true
+        errorImage.setImageResource(R.drawable.no_search_results_placeholder)
+        errorText.text = resources.getText(R.string.no_search_results)
+        errorRefreshButton.isVisible = false
     }
     private fun iTunesSearch(query: String) {
-        if (query.isNotEmpty()) {
-            loadingProgressBar.isVisible=true
-            errorPlaceholderLayout.isVisible=false
-            trackListRecyclerView.isVisible=false
-            iTunesService.search(query).enqueue(object : Callback<ITunesResponse> {
-                override fun onResponse(call: Call<ITunesResponse>,
-                                        response: Response<ITunesResponse>
-                ) {
-                    loadingProgressBar.isVisible=false
-                    if (response.isSuccessful) {
-                        val results = response.body()?.results
-                        if(results!= null){
+        tracksInteractor.searchTracks(query, object: TracksInteractor.TracksConsumer {
+            override fun consume(searchResult: TracksSearchResult) {
+                handler.post {
+                    when(searchResult.type){
+                        SearchResultType.SUCCESS ->{
+                            loadingProgressBar.isVisible = false
                             tracks.clear()
-                            if (results.isEmpty()) {
-                                trackListAdapter.notifyDataSetChanged()
-                                trackListRecyclerView.visibility = View.GONE
-                                errorPlaceholderLayout.visibility = View.VISIBLE
-                                errorImage.setImageResource(R.drawable.no_search_results_placeholder)
-                                errorText.text = resources.getText(R.string.no_search_results)
-                                errorRefreshButton.visibility = View.GONE
-                            } else {
-                                tracks.addAll(results)
-                                trackListAdapter.notifyDataSetChanged()
-                                errorPlaceholderLayout.visibility = View.GONE
-                                trackListRecyclerView.visibility = View.VISIBLE
-                            }
+                            tracks.addAll(searchResult.tracks)
+                            trackListAdapter.notifyDataSetChanged()
+                            errorPlaceholderLayout.visibility = View.GONE
+                            trackListRecyclerView.visibility = View.VISIBLE
                         }
-                    } else {
-                        lastSearch = query
-                        trackListRecyclerView.visibility = View.GONE
-                        errorRefreshButton.visibility = View.VISIBLE
-                        errorPlaceholderLayout.visibility = View.VISIBLE
-                        errorImage.setImageResource(R.drawable.no_connection_placeholder)
-                        errorText.text = resources.getText(R.string.connection_problem)
+                        SearchResultType.EMPTY -> {
+                            tracks.clear()
+                            trackListAdapter.notifyDataSetChanged()
+                            setEmptyResultsScreenState()
+                        }
+                        SearchResultType.LOADING -> {
+                            setLoadingScreenState()
+                        }
+                        SearchResultType.ERROR -> {
+                            lastSearch = query
+                            setNetworkErrorScreenState()
+                        }
                     }
                 }
-                override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
-                    lastSearch = query
-                    trackListRecyclerView.visibility = View.GONE
-                    loadingProgressBar.isVisible=false
-                    errorRefreshButton.visibility = View.VISIBLE
-                    errorPlaceholderLayout.visibility = View.VISIBLE
-                    errorImage.setImageResource(R.drawable.no_connection_placeholder)
-                    errorText.text = resources.getText(R.string.connection_problem)
-                }
 
-            })
+            }
         }
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle){
