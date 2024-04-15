@@ -1,11 +1,13 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui.search
 
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.data.LocalStorage.SearchHistory
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.ui.player.PlayerActivity
 import com.google.gson.Gson
 
 class TrackListAdapter(private val tracks: List<Track>, private val searchHistory: SearchHistory) : RecyclerView.Adapter<TrackViewHolder>() {
