@@ -20,7 +20,7 @@ val repositoryModule = module{
     single<TracksRepository>{
         TracksRepositoryImpl(get())
     }
-    single<MediaPlayerRepository>{
+    factory<MediaPlayerRepository>{
         AndroidMediaPlayerRepositoryImpl(get())
     }
 }

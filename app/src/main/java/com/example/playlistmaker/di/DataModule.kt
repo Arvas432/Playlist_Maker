@@ -40,7 +40,7 @@ val dataModule = module{
     single<ThemeSwitcher>{
         ThemeSwitcherImpl(get(), get())
     }
-    single{
+    factory{
         MediaPlayer()
     }
 }
