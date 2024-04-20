@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.ui.search.SearchActivity"
+    tools:context=".ui.search.activity.SearchActivity"
     android:background="?attr/colorPrimary"
     android:orientation="vertical">
     <LinearLayout
@@ -51,6 +51,7 @@
             android:src="@drawable/clear_icon"
             android:layout_marginEnd="16dp"
             android:visibility="gone"
+            tools:visibility="visible"
             app:tint="@color/clear_button_color" />
 
 

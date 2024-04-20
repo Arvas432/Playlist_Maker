@@ -2,11 +2,13 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.creator.Creator
 
 class App: Application() {
 
     var darkTheme = false
     override fun onCreate() {
+        Creator.setApplication(this)
         val savedThemeValue = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE).getString(
             THEME_MODE_KEY, "")
         if(savedThemeValue.isNullOrEmpty()){
