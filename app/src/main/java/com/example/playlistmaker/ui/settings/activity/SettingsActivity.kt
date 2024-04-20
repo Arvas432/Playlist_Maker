@@ -4,20 +4,19 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.ui.settings.SettingsState
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel by viewModel<SettingsViewModel>()
     private lateinit var binding: ActivitySettingsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this, SettingsViewModel.getViewModelFactory())[SettingsViewModel::class.java]
         viewModel.getScreenStateLiveData().observe(this){
             when(it){
                 SettingsState.switchOff -> binding.nightModeSwitch.isChecked = false
@@ -38,8 +37,6 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(shareIntent)
         }
         binding.techSupportButton.setOnClickListener {
-            //Я пытался сделать все переходы во внешние приложения через ExternalNavigator в слое data как в методичке в примере указано,
-            //но из слоя data нельзя вызывать startActivity и нельзя запрашивать ресурсы, поэтому оставил здесь
             val techSupportIntent = Intent(Intent.ACTION_SENDTO)
             techSupportIntent.data = Uri.parse("mailto:")
             techSupportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.my_email)))

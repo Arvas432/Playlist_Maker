@@ -4,17 +4,12 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.data.player.AndroidMediaPlayerRepositoryImpl
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.ui.player.PlayerState
 
 class PlayerViewModel(
-    private val track: Track,
     private val playerInteractor: PlayerInteractor
     ):ViewModel() {
     private var screenStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
@@ -32,7 +27,7 @@ class PlayerViewModel(
 
     fun getScreenStateLiveData(): LiveData<PlayerState> = screenStateLiveData
     fun getCurrentPositionLiveData(): LiveData<String> = currentPositionLiveData
-    init {
+    fun preparePlayer(track: Track){
         playerInteractor.preparePlayer(track.previewUrl
         ) {
             renderState(PlayerState.Prepared)
@@ -71,15 +66,5 @@ class PlayerViewModel(
 
     companion object {
         const val TIMER_DELAY = 300L
-        fun getViewModelFactory(track: Track): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val interactor = Creator.provideMediaPlayerInteractor()
-
-                PlayerViewModel(
-                    track,
-                    interactor
-                )
-            }
-        }
     }
 }

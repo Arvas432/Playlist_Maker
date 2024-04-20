@@ -6,7 +6,7 @@ import com.example.playlistmaker.domain.search.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SharedPreferencesLocalTrackStorageHandler(private val sharedPreferences: SharedPreferences):
+class SharedPreferencesLocalTrackStorageHandler(private val sharedPreferences: SharedPreferences, private val gson: Gson):
     LocalTrackStorageHandler {
     override fun write(input: Track){
         var currentSearchHistory = read()
@@ -18,7 +18,7 @@ class SharedPreferencesLocalTrackStorageHandler(private val sharedPreferences: S
         clear()
         sharedPreferences
             .edit()
-            .putString(SEARCH_HISTORY_KEY, Gson().toJson(currentSearchHistory))
+            .putString(SEARCH_HISTORY_KEY, gson.toJson(currentSearchHistory))
             .apply()
     }
     override fun clear(){
@@ -29,7 +29,7 @@ class SharedPreferencesLocalTrackStorageHandler(private val sharedPreferences: S
     }
     override fun read(): List<Track> {
         val json = sharedPreferences.getString(SEARCH_HISTORY_KEY, null) ?: return emptyList()
-        return Gson().fromJson(json, object: TypeToken<List<Track>>() {}.type)
+        return gson.fromJson(json, object: TypeToken<List<Track>>() {}.type)
     }
     companion object{
         const val SEARCH_HISTORY_KEY = "search_history_key"

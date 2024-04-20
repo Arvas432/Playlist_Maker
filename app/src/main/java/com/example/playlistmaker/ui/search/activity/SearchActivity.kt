@@ -8,18 +8,18 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.ui.search.SearchState
 import com.example.playlistmaker.ui.search.adapters.TrackListAdapter
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding :ActivitySearchBinding
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel by viewModel<SearchViewModel>()
     private var searchFieldEmpty: Boolean = true
     private var tracks = ArrayList<Track>()
     private lateinit var trackListAdapter: TrackListAdapter
@@ -28,20 +28,13 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this, SearchViewModel.getViewModelFactory())[SearchViewModel::class.java]
+      //  viewModel = ViewModelProvider(this, SearchViewModel.getViewModelFactory())[SearchViewModel::class.java]
         viewModel.getScreenStateLiveData().observe(this){
             renderState(it)
         }
         binding.searchFieldEdittext.setText(viewModel.getSearchData())
         trackListAdapter = TrackListAdapter(tracks, viewModel)
         binding.trackListRecyclerview.adapter = trackListAdapter
-        binding.clearHistoryButton.setOnClickListener {
-            viewModel.clearHistory()
-            tracks.clear()
-            trackListAdapter.notifyDataSetChanged()
-            binding.clearHistoryButton.isVisible = false
-            binding.searchHistoryTextview.isVisible = false
-        }
         binding.clearHistoryButton.setOnClickListener {
             viewModel.clearHistory()
             tracks.clear()

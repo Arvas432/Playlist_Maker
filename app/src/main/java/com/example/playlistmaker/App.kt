@@ -2,13 +2,17 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.di.dataModule
+import com.example.playlistmaker.di.interactorModule
+import com.example.playlistmaker.di.repositoryModule
+import com.example.playlistmaker.di.viewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class App: Application() {
 
     var darkTheme = false
     override fun onCreate() {
-        Creator.setApplication(this)
         val savedThemeValue = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE).getString(
             THEME_MODE_KEY, "")
         if(savedThemeValue.isNullOrEmpty()){
@@ -24,6 +28,10 @@ class App: Application() {
                 }
             }
             switchTheme(darkTheme)
+        }
+        startKoin{
+            androidContext(this@App)
+            modules(dataModule, repositoryModule, viewModelModule, interactorModule)
         }
         super.onCreate()
     }
