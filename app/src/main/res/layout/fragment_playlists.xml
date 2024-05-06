@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/error_placeholder_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.mediateka.fragments.FavoritesFragment">
+    <Button
+        style="@style/rounded_button"
+        android:id="@+id/new_playlist_btn"
+        android:layout_marginTop="24dp"
+        android:text="@string/new_playlist" />
+    <ImageView
+        android:id="@+id/error_placeholder_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="46dp"
+        android:src="@drawable/no_search_results_placeholder"
+        />
+    <TextView
+        android:id="@+id/error_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:lineHeight="22sp"
+        android:textAppearance="@style/error_message"
+        android:textColor="?attr/colorOnPrimary"
+        android:layout_marginTop="@dimen/extra_large_margin"
+        android:text="@string/you_have_not_created_any_playlists"
+        />
+</LinearLayout>
