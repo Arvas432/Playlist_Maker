@@ -3,10 +3,6 @@ package com.example.playlistmaker.ui.settings.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.domain.settings.SettingsInteractor
 import com.example.playlistmaker.domain.settings.model.ThemeSettings
 import com.example.playlistmaker.ui.settings.SettingsState
@@ -32,16 +28,6 @@ class SettingsViewModel(
     }
     private fun renderState(state: SettingsState){
         screenStateLiveData.postValue(state)
-    }
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val settingsInteractor = Creator.provideSettingsInteractor()
-                SettingsViewModel(
-                    settingsInteractor
-                )
-            }
-        }
     }
 
 }
