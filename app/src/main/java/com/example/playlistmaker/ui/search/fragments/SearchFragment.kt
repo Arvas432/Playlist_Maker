@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.search.models.Track
@@ -36,7 +38,9 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
             renderState(it)
         }
         binding.searchFieldEdittext.setText(viewModel.getSearchData())
-        trackListAdapter = TrackListAdapter(tracks, viewModel)
+        trackListAdapter = TrackListAdapter(tracks, viewModel) {
+            findNavController().navigate(R.id.action_searchFragment_to_playerActivity, it)
+        }
         binding.trackListRecyclerview.adapter = trackListAdapter
         binding.clearHistoryButton.setOnClickListener {
             viewModel.clearHistory()

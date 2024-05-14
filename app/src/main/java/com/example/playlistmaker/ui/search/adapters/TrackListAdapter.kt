@@ -1,19 +1,19 @@
 package com.example.playlistmaker.ui.search.adapters
 
-import android.content.Intent
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.TrackItemViewBinding
 import com.example.playlistmaker.domain.search.models.Track
-import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.ui.search.viewholders.TrackViewHolder
 import com.google.gson.Gson
 
-class TrackListAdapter(private val tracks: List<Track>, private val viewModel: SearchViewModel) : RecyclerView.Adapter<TrackViewHolder>() {
+class TrackListAdapter(private val tracks: List<Track>, private val viewModel: SearchViewModel, val navigationAction: (Bundle)-> Unit) : RecyclerView.Adapter<TrackViewHolder>() {
     private var isClickAllowed = true
 
     private val handler = Handler(Looper.getMainLooper())
@@ -32,9 +32,7 @@ class TrackListAdapter(private val tracks: List<Track>, private val viewModel: S
         holder.itemView.setOnClickListener{
             if(clickDebounce()){
                 viewModel.writeToHistory(tracks[position])
-                val navigateToPlayerActivity = Intent(holder.itemView.context, PlayerActivity::class.java)
-                navigateToPlayerActivity.putExtra(TRACK_PLAYER_KEY,Gson().toJson(tracks[position]))
-                holder.itemView.context.startActivity(navigateToPlayerActivity)
+                navigationAction(bundleOf(TRACK_PLAYER_KEY to Gson().toJson(tracks[position])))
             }
         }
     }
