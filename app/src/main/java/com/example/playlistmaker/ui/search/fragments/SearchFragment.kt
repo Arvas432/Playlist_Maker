@@ -1,35 +1,38 @@
-package com.example.playlistmaker.ui.search.activity
+package com.example.playlistmaker.ui.search.fragments
 
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.search.models.Track
-import com.example.playlistmaker.ui.search.SearchState
+import com.example.playlistmaker.ui.mediateka.fragments.BindingFragment
+import com.example.playlistmaker.ui.search.states.SearchState
 import com.example.playlistmaker.ui.search.adapters.TrackListAdapter
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+class SearchFragment : BindingFragment<FragmentSearchBinding>() {
 
-class SearchActivity : AppCompatActivity() {
-    private lateinit var binding :ActivitySearchBinding
+    override fun createBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSearchBinding {
+        return FragmentSearchBinding.inflate(inflater, container, false)
+    }
     private val viewModel by viewModel<SearchViewModel>()
     private var searchFieldEmpty: Boolean = true
     private var tracks = ArrayList<Track>()
     private lateinit var trackListAdapter: TrackListAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-      //  viewModel = ViewModelProvider(this, SearchViewModel.getViewModelFactory())[SearchViewModel::class.java]
-        viewModel.getScreenStateLiveData().observe(this){
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel.getScreenStateLiveData().observe(viewLifecycleOwner){
             renderState(it)
         }
         binding.searchFieldEdittext.setText(viewModel.getSearchData())
@@ -41,7 +44,7 @@ class SearchActivity : AppCompatActivity() {
             trackListAdapter.notifyDataSetChanged()
             setDefaultScreenState()
         }
-        val searchFieldTextWatcher = object : TextWatcher{
+        val searchFieldTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()){
@@ -72,8 +75,8 @@ class SearchActivity : AppCompatActivity() {
         binding.clearButton.setOnClickListener {
             tracks.clear()
             trackListAdapter.notifyDataSetChanged()
-            currentFocus?.let {
-                val inputMethodManager = ContextCompat.getSystemService(this, InputMethodManager::class.java)!!
+            requireActivity().currentFocus?.let {
+                val inputMethodManager = ContextCompat.getSystemService(requireContext(), InputMethodManager::class.java)!!
                 inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
             }
             binding.searchFieldEdittext.setText("")
@@ -81,7 +84,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchFieldEdittext.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-              viewModel.immediateSearch()
+                viewModel.immediateSearch()
             }
             false
         }
@@ -89,9 +92,6 @@ class SearchActivity : AppCompatActivity() {
             viewModel.searchLast()
         }
 
-        binding.backBtn.setOnClickListener {
-            finish()
-        }
 
     }
     private fun setNetworkErrorScreenState(){
@@ -151,11 +151,14 @@ class SearchActivity : AppCompatActivity() {
             is SearchState.SearchHistory ->{setSearchHistoryScreenState(state.tracks)}
             is SearchState.Content ->{setContentScreenState(state.tracks)}
         }
-
     }
-
     override fun onDestroy() {
         super.onDestroy()
         viewModel.onDestroy()
+    }
+    companion object{
+        @JvmStatic
+        fun newInstance() = SearchFragment.apply {  }
+
     }
 }

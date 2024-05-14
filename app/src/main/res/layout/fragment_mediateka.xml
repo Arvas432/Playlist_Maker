@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/colorPrimary"
-    tools:context=".ui.mediateka.activity.MediatekaActivity">
+    tools:context=".ui.mediateka.fragments.MediatekaFragment">
     <LinearLayout
         android:id="@+id/settings_header"
         android:layout_width="match_parent"
@@ -15,15 +15,11 @@
         android:layout_marginEnd="52dp"
         android:layout_marginTop="@dimen/small_margin"
         android:layout_marginStart="@dimen/small_margin">
-    <ImageButton
-        style="@style/back_button"
-        android:id="@+id/back_btn"
-        app:tint="?attr/colorOnPrimary" />
-    <TextView
-        android:layout_marginStart="@dimen/medium_margin"
-        android:text="@string/media"
-        style="@style/title_black"
-        android:layout_marginBottom="12dp"/>
+        <TextView
+            android:layout_marginStart="@dimen/medium_margin"
+            android:text="@string/media"
+            style="@style/title_black"
+            android:layout_marginBottom="12dp"/>
     </LinearLayout>
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"

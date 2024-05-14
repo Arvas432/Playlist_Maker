@@ -1,33 +1,39 @@
-package com.example.playlistmaker.ui.settings.activity
+package com.example.playlistmaker.ui.settings.fragments
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.ui.settings.SettingsState
+import com.example.playlistmaker.databinding.FragmentSettingsBinding
+import com.example.playlistmaker.ui.mediateka.fragments.BindingFragment
+import com.example.playlistmaker.ui.settings.states.SettingsState
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment : BindingFragment<FragmentSettingsBinding>(){
     private val viewModel by viewModel<SettingsViewModel>()
-    private lateinit var binding: ActivitySettingsBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        viewModel.getScreenStateLiveData().observe(this){
+    override fun createBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSettingsBinding {
+        return FragmentSettingsBinding.inflate(inflater, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getScreenStateLiveData().observe(viewLifecycleOwner){
             when(it){
                 SettingsState.switchOff -> binding.nightModeSwitch.isChecked = false
                 SettingsState.switchOn -> binding.nightModeSwitch.isChecked = true
+                SettingsState.switchActive -> binding.nightModeSwitch.isEnabled = true
+                SettingsState.switchInactive -> binding.nightModeSwitch.isEnabled = false
             }
         }
         binding.nightModeSwitch.setOnCheckedChangeListener { switcher, isChecked ->
             viewModel.switchTheme(isChecked)
-        }
-        binding.backBtn.setOnClickListener {
-            finish()
         }
         binding.shareButton.setOnClickListener {
             val shareLink = getString(R.string.share_link)
@@ -51,5 +57,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(termsOfServiceIntent)
         }
     }
-
+    companion object{
+        fun newInstance() = SettingsFragment.apply {  }
+    }
 }

@@ -10,7 +10,7 @@ import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.models.SearchResultType
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.domain.search.models.TracksSearchResult
-import com.example.playlistmaker.ui.search.SearchState
+import com.example.playlistmaker.ui.search.states.SearchState
 
 class SearchViewModel(
     private val tracksInteractor: TracksInteractor,
