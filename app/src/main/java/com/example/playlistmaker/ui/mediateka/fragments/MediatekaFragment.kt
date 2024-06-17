@@ -8,6 +8,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMediatekaBinding
 import com.example.playlistmaker.ui.mediateka.adapters.MediatekaViewPagerAdapter
 import com.example.playlistmaker.ui.mediateka.view_model.MediatekaViewModel
+import com.example.playlistmaker.utils.BindingFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

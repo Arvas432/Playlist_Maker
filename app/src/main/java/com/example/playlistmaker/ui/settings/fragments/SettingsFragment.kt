@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSettingsBinding
-import com.example.playlistmaker.ui.mediateka.fragments.BindingFragment
+import com.example.playlistmaker.utils.BindingFragment
 import com.example.playlistmaker.ui.settings.states.SettingsState
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
