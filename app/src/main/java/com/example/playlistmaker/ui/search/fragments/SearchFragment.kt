@@ -187,6 +187,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
         binding.trackListRecyclerview.isVisible = true
     }
 
+
     private fun renderState(state: SearchState) {
         when (state) {
             is SearchState.Default -> {
