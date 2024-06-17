@@ -11,14 +11,18 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.search.models.Track
-import com.example.playlistmaker.ui.mediateka.fragments.BindingFragment
+import com.example.playlistmaker.utils.BindingFragment
 import com.example.playlistmaker.ui.search.states.SearchState
 import com.example.playlistmaker.ui.search.adapters.TrackListAdapter
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
+import com.google.gson.Gson
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : BindingFragment<FragmentSearchBinding>() {
@@ -30,24 +34,52 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
         return FragmentSearchBinding.inflate(inflater, container, false)
     }
     private val viewModel by viewModel<SearchViewModel>()
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
     private var searchFieldEmpty: Boolean = true
     private var tracks = ArrayList<Track>()
     private lateinit var trackListAdapter: TrackListAdapter
+    private var clickAllowed = true
+    private fun clickDebounce(): Boolean{
+        val current = clickAllowed
+        if(clickAllowed){
+            clickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                clickAllowed = true
+            }
+        }
+        return current
+    }
+    //хихи
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel.getScreenStateLiveData().observe(viewLifecycleOwner){
             renderState(it)
         }
         binding.searchFieldEdittext.setText(viewModel.getSearchData())
-        trackListAdapter = TrackListAdapter(tracks, viewModel) {
-            findNavController().navigate(R.id.action_searchFragment_to_playerActivity, it)
-        }
-        binding.trackListRecyclerview.adapter = trackListAdapter
+
+
         binding.clearHistoryButton.setOnClickListener {
             viewModel.clearHistory()
             tracks.clear()
             trackListAdapter.notifyDataSetChanged()
             setDefaultScreenState()
         }
+        onTrackClickDebounce = {
+            track ->
+            run {
+                if (clickDebounce()){
+                    viewModel.writeToHistory(track)
+                    findNavController().navigate(
+                        R.id.action_searchFragment_to_playerActivity,
+                        bundleOf(TRACK_PLAYER_KEY to Gson().toJson(track))
+                    )
+                }
+            }
+        }
+        trackListAdapter = TrackListAdapter(tracks) { track ->
+            onTrackClickDebounce(track)
+        }
+        binding.trackListRecyclerview.adapter = trackListAdapter
         val searchFieldTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -156,13 +188,11 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
             is SearchState.Content ->{setContentScreenState(state.tracks)}
         }
     }
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.onDestroy()
-    }
     companion object{
         @JvmStatic
         fun newInstance() = SearchFragment.apply {  }
+        const val TRACK_PLAYER_KEY = "TRACK_PLAYER_KEY"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
 
     }
 }
