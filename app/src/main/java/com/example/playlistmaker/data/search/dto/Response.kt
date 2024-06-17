@@ -1,5 +1,4 @@
 package com.example.playlistmaker.data.search.dto
 
-open class Response {
-    var resultCode = 0
-}
+open class Response(var resultCode: Int = 0)
+

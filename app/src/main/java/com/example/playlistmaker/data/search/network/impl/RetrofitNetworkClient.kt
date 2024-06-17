@@ -15,11 +15,11 @@ class RetrofitNetworkClient(private val iTunesService: ITunesApi): NetworkClient
                     val resp = iTunesService.search(dto.expression)
                     resp.apply { resultCode = 200}
                 } catch(e: Throwable){
-                    Response().apply { resultCode = 500 }
+                    Response(500)
                 }
             }
         }else{
-            return Response().apply { resultCode=400 }
+            return Response(400)
         }
     }
 
