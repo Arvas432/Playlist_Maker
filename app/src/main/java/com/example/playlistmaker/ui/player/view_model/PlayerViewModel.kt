@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.player.view_model
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,22 +19,27 @@ class PlayerViewModel(
     private var screenStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
     private var currentPositionLiveData = MutableLiveData<String>()
     private var timerJob: Job? = null
+    private var changingScreenOrientation = false
 
     fun getScreenStateLiveData(): LiveData<PlayerState> = screenStateLiveData
     fun getCurrentPositionLiveData(): LiveData<String> = currentPositionLiveData
     fun preparePlayer(track: Track) {
-        playerInteractor.preparePlayer(
-            track.previewUrl
-        ) {
-            renderState(PlayerState.Prepared)
+        Log.i("PREPARING PLAYER", changingScreenOrientation.toString())
+        if(!changingScreenOrientation){
+            playerInteractor.preparePlayer(
+                track.previewUrl
+            ) {
+                renderState(PlayerState.Prepared)
+            }
+            playerInteractor.setCompletionListener {
+                timerJob?.cancel()
+                renderState(PlayerState.Prepared)
+            }
         }
-        playerInteractor.setCompletionListener {
-            timerJob?.cancel()
-            renderState(PlayerState.Prepared)
-        }
+        changingScreenOrientation = false
     }
 
-    fun startPlayer() {
+    private fun startPlayer() {
         playerInteractor.play()
         renderState(PlayerState.Playing)
         timerJob = viewModelScope.launch {
@@ -44,6 +50,9 @@ class PlayerViewModel(
         }
     }
 
+    fun beforeScreenRotate(){
+        changingScreenOrientation = true
+    }
     fun pausePlayer() {
         playerInteractor.pause()
         renderState(PlayerState.Paused)
