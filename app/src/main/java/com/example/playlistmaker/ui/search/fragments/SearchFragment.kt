@@ -50,6 +50,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
         }
         return current
     }
+    //хихи
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel.getScreenStateLiveData().observe(viewLifecycleOwner){
             renderState(it)
