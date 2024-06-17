@@ -1,47 +1,86 @@
-package com.example.playlistmaker.ui.search.activity
+package com.example.playlistmaker.ui.search.fragments
 
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.search.models.Track
-import com.example.playlistmaker.ui.search.SearchState
+import com.example.playlistmaker.utils.BindingFragment
+import com.example.playlistmaker.ui.search.states.SearchState
 import com.example.playlistmaker.ui.search.adapters.TrackListAdapter
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
+import com.google.gson.Gson
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+class SearchFragment : BindingFragment<FragmentSearchBinding>() {
 
-class SearchActivity : AppCompatActivity() {
-    private lateinit var binding :ActivitySearchBinding
+    override fun createBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSearchBinding {
+        return FragmentSearchBinding.inflate(inflater, container, false)
+    }
     private val viewModel by viewModel<SearchViewModel>()
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
     private var searchFieldEmpty: Boolean = true
     private var tracks = ArrayList<Track>()
     private lateinit var trackListAdapter: TrackListAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-      //  viewModel = ViewModelProvider(this, SearchViewModel.getViewModelFactory())[SearchViewModel::class.java]
-        viewModel.getScreenStateLiveData().observe(this){
+    private var clickAllowed = true
+    private fun clickDebounce(): Boolean{
+        val current = clickAllowed
+        if(clickAllowed){
+            clickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                clickAllowed = true
+            }
+        }
+        return current
+    }
+    //хихи
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel.getScreenStateLiveData().observe(viewLifecycleOwner){
             renderState(it)
         }
         binding.searchFieldEdittext.setText(viewModel.getSearchData())
-        trackListAdapter = TrackListAdapter(tracks, viewModel)
-        binding.trackListRecyclerview.adapter = trackListAdapter
+
+
         binding.clearHistoryButton.setOnClickListener {
             viewModel.clearHistory()
             tracks.clear()
             trackListAdapter.notifyDataSetChanged()
             setDefaultScreenState()
         }
-        val searchFieldTextWatcher = object : TextWatcher{
+        onTrackClickDebounce = {
+            track ->
+            run {
+                if (clickDebounce()){
+                    viewModel.writeToHistory(track)
+                    findNavController().navigate(
+                        R.id.action_searchFragment_to_playerActivity,
+                        bundleOf(TRACK_PLAYER_KEY to Gson().toJson(track))
+                    )
+                }
+            }
+        }
+        trackListAdapter = TrackListAdapter(tracks) { track ->
+            onTrackClickDebounce(track)
+        }
+        binding.trackListRecyclerview.adapter = trackListAdapter
+        val searchFieldTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()){
@@ -72,8 +111,8 @@ class SearchActivity : AppCompatActivity() {
         binding.clearButton.setOnClickListener {
             tracks.clear()
             trackListAdapter.notifyDataSetChanged()
-            currentFocus?.let {
-                val inputMethodManager = ContextCompat.getSystemService(this, InputMethodManager::class.java)!!
+            requireActivity().currentFocus?.let {
+                val inputMethodManager = ContextCompat.getSystemService(requireContext(), InputMethodManager::class.java)!!
                 inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
             }
             binding.searchFieldEdittext.setText("")
@@ -81,7 +120,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchFieldEdittext.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-              viewModel.immediateSearch()
+                viewModel.immediateSearch()
             }
             false
         }
@@ -89,9 +128,6 @@ class SearchActivity : AppCompatActivity() {
             viewModel.searchLast()
         }
 
-        binding.backBtn.setOnClickListener {
-            finish()
-        }
 
     }
     private fun setNetworkErrorScreenState(){
@@ -151,11 +187,12 @@ class SearchActivity : AppCompatActivity() {
             is SearchState.SearchHistory ->{setSearchHistoryScreenState(state.tracks)}
             is SearchState.Content ->{setContentScreenState(state.tracks)}
         }
-
     }
+    companion object{
+        @JvmStatic
+        fun newInstance() = SearchFragment.apply {  }
+        const val TRACK_PLAYER_KEY = "TRACK_PLAYER_KEY"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
 
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.onDestroy()
     }
 }

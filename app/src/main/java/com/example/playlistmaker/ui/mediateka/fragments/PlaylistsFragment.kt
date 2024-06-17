@@ -3,17 +3,12 @@ package com.example.playlistmaker.ui.mediateka.fragments
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.ui.mediateka.view_model.PlaylistsFragmentViewModel
+import com.example.playlistmaker.utils.BindingFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PlaylistsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
     private val playlistsViewModel: PlaylistsFragmentViewModel by viewModel{
         parametersOf()

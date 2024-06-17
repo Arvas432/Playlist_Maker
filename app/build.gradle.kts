@@ -41,6 +41,9 @@ android {
 
 dependencies {
     val moxyVersion = "2.2.2"
+    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
+    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
+    implementation("androidx.fragment:fragment-ktx:1.5.6")
     implementation("io.insert-koin:koin-android:3.3.0")
     implementation("com.github.moxy-community:moxy:$moxyVersion")
     implementation("com.github.moxy-community:moxy-android:$moxyVersion")
@@ -58,4 +61,5 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 }

@@ -1,16 +1,17 @@
 package com.example.playlistmaker.ui.search.view_model
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.models.SearchResultType
 import com.example.playlistmaker.domain.search.models.Track
-import com.example.playlistmaker.domain.search.models.TracksSearchResult
-import com.example.playlistmaker.ui.search.SearchState
+import com.example.playlistmaker.ui.search.states.SearchState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val tracksInteractor: TracksInteractor,
@@ -18,16 +19,13 @@ class SearchViewModel(
     private var screenStateLiveData = MutableLiveData<SearchState>(SearchState.Default)
     private var searchData: String = SEARCH_DEF
     private var lastSearch: String = SEARCH_DEF
-    private val handler = Handler(Looper.getMainLooper())
-    private val searchRunnable = Runnable {
-        iTunesSearch(searchData)
-    }
+    private var searchJob: Job? = null
     fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable, SEARCH_RUNNABLE_TOKEN)
-        handler.postDelayed(searchRunnable ,
-            SEARCH_RUNNABLE_TOKEN,
-            SEARCH_DEBOUNCE_DELAY
-        )
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            iTunesSearch(searchData)
+        }
     }
     fun setSearchData(input: String){
         searchData = input
@@ -40,7 +38,7 @@ class SearchViewModel(
         renderState(SearchState.Default)
     }
     fun showHistory(){
-        handler.removeCallbacksAndMessages(null)
+        searchJob?.cancel()
         val history = searchHistoryInteractor.read()
         if(history.isNotEmpty()){
             renderState(SearchState.SearchHistory(history))
@@ -52,47 +50,43 @@ class SearchViewModel(
         searchHistoryInteractor.write(input)
     }
     fun immediateSearch(){
-        handler.removeCallbacks(searchRunnable, SEARCH_RUNNABLE_TOKEN)
+        searchJob?.cancel()
         iTunesSearch(searchData)
     }
     fun searchLast(){
-        handler.removeCallbacks(searchRunnable, SEARCH_RUNNABLE_TOKEN)
+        searchJob?.cancel()
         iTunesSearch(lastSearch)
     }
     private fun iTunesSearch(query: String) {
-        tracksInteractor.searchTracks(query, object: TracksInteractor.TracksConsumer {
-            override fun consume(searchResult: TracksSearchResult) {
-                handler.post {
-                    when(searchResult.type){
-                        SearchResultType.SUCCESS ->{
-                            renderState(SearchState.Content(searchResult.tracks))
-                        }
-                        SearchResultType.EMPTY -> {
-                            renderState(SearchState.EmptyResults)
-                        }
-                        SearchResultType.LOADING -> {
-                            renderState(SearchState.Loading)
-                        }
-                        SearchResultType.ERROR -> {
-                            renderState(SearchState.NetworkError)
-                            lastSearch = query
+        if (query.isNotEmpty()){
+            renderState(SearchState.Loading)
+            viewModelScope.launch {
+                tracksInteractor.searchTracks(query)
+                    .collect{
+                        when(it.type){
+                            SearchResultType.SUCCESS ->{
+                                renderState(SearchState.Content(it.tracks))
+                            }
+                            SearchResultType.EMPTY -> {
+                                renderState(SearchState.EmptyResults)
+                            }
+                            SearchResultType.LOADING -> {
+                                renderState(SearchState.Loading)
+                            }
+                            SearchResultType.ERROR -> {
+                                renderState(SearchState.NetworkError)
+                                lastSearch = query
+                            }
                         }
                     }
-                }
-
             }
         }
-        )
     }
 
     private fun renderState(state: SearchState){
         screenStateLiveData.postValue(state)
     }
-    fun onDestroy(){
-        handler.removeCallbacksAndMessages(null)
-    }
     companion object {
-        const val SEARCH_RUNNABLE_TOKEN = 1
         const val SEARCH_DEF = ""
         const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
