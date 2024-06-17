@@ -59,7 +59,6 @@ class SearchViewModel(
         handler.removeCallbacks(searchRunnable, SEARCH_RUNNABLE_TOKEN)
         iTunesSearch(lastSearch)
     }
-    //хихи
     private fun iTunesSearch(query: String) {
         tracksInteractor.searchTracks(query, object: TracksInteractor.TracksConsumer {
             override fun consume(searchResult: TracksSearchResult) {
