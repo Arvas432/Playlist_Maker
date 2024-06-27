@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.mediateka.fragments
+package com.example.playlistmaker.utils
 
 import android.os.Bundle
 import android.view.LayoutInflater

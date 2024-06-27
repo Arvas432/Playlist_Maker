@@ -1,66 +1,81 @@
 package com.example.playlistmaker.ui.player.view_model
 
-import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.data.player.AndroidMediaPlayerRepositoryImpl
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.ui.player.PlayerState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor
-    ):ViewModel() {
+) : ViewModel() {
     private var screenStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
     private var currentPositionLiveData = MutableLiveData<String>()
-    private var handler = android.os.Handler(Looper.getMainLooper())
-    private var timerRunnable = object:Runnable {
-        override fun run() {
-            if(playerInteractor.getPlayerState() == AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PLAYING){
-                currentPositionLiveData.postValue(playerInteractor.getCurrentPosFormatted())
-                handler.postDelayed(this, TIMER_DELAY)
-            }
-        }
-
-    }
+    private var timerJob: Job? = null
+    private var changingScreenOrientation = false
 
     fun getScreenStateLiveData(): LiveData<PlayerState> = screenStateLiveData
     fun getCurrentPositionLiveData(): LiveData<String> = currentPositionLiveData
-    fun preparePlayer(track: Track){
-        playerInteractor.preparePlayer(track.previewUrl
-        ) {
-            renderState(PlayerState.Prepared)
+    fun preparePlayer(track: Track) {
+        Log.i("PREPARING PLAYER", changingScreenOrientation.toString())
+        if(!changingScreenOrientation){
+            playerInteractor.preparePlayer(
+                track.previewUrl
+            ) {
+                renderState(PlayerState.Prepared)
+            }
+            playerInteractor.setCompletionListener {
+                timerJob?.cancel()
+                renderState(PlayerState.Prepared)
+            }
         }
-        playerInteractor.setCompletionListener {
-            handler.removeCallbacks(timerRunnable)
-            renderState(PlayerState.Prepared)
-        }
+        changingScreenOrientation = false
     }
-    fun startPlayer(){
+
+    private fun startPlayer() {
         playerInteractor.play()
         renderState(PlayerState.Playing)
-        handler.postDelayed(timerRunnable, TIMER_DELAY)
+        timerJob = viewModelScope.launch {
+            while (playerInteractor.getPlayerState() == AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PLAYING) {
+                delay(TIMER_DELAY)
+                currentPositionLiveData.postValue(playerInteractor.getCurrentPosFormatted())
+            }
+        }
     }
-    fun pausePlayer(){
+
+    fun beforeScreenRotate(){
+        changingScreenOrientation = true
+    }
+    fun pausePlayer() {
         playerInteractor.pause()
         renderState(PlayerState.Paused)
-        handler.removeCallbacks(timerRunnable)
+        timerJob?.cancel()
     }
-    fun playbackControl(){
-        when(playerInteractor.getPlayerState()){
+
+    fun playbackControl() {
+        when (playerInteractor.getPlayerState()) {
             AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PLAYING -> {
                 pausePlayer()
             }
+
             AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PREPARED, AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PAUSED -> {
                 startPlayer()
             }
         }
     }
-    fun releasePlayer(){
+
+    fun releasePlayer() {
         playerInteractor.releasePlayer()
     }
-    private fun renderState(state: PlayerState){
+
+    private fun renderState(state: PlayerState) {
         screenStateLiveData.postValue(state)
     }
 
