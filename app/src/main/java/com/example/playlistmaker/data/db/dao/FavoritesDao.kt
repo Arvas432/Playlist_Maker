@@ -12,10 +12,10 @@ interface FavoritesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrackIntoFavorites(track: TrackEntity)
 
-    @Delete(entity = TrackEntity::class)
-    suspend fun deleteTrackFromFavorites(track: TrackEntity)
+    @Query("DELETE FROM favorites_table WHERE track_id = :id")
+    suspend fun deleteTrackFromFavorites(id: Int)
 
-    @Query("SELECT * FROM favorites_table")
+    @Query("SELECT * FROM favorites_table ORDER BY insertion_timestamp")
     suspend fun getFavorites(): List<TrackEntity>
 
     @Query("SELECT track_id FROM favorites_table")

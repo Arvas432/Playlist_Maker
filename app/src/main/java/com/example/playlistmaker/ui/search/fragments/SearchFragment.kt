@@ -68,6 +68,8 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
         Log.i("LIFECYCLE", "ONRESUME")
         if(binding.searchFieldEdittext.text.isEmpty()){
             viewModel.showHistory()
+        } else{
+            viewModel.immediateSearch()
         }
     }
 

@@ -17,7 +17,7 @@ class FavoritesRepositoryImpl(
     }
 
     override suspend fun removeFromFavorites(track: Track) {
-        appDatabase.favoritesDao().deleteTrackFromFavorites(trackConverter.mapModelToEntity(track))
+        appDatabase.favoritesDao().deleteTrackFromFavorites(track.trackId)
     }
 
     override fun getFavorites(): Flow<List<Track>> = flow {
