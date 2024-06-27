@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/error_placeholder_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.mediateka.fragments.FavoritesFragment">
         <ImageView
+            android:visibility="gone"
             android:id="@+id/error_placeholder_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -15,6 +16,7 @@
             android:src="@drawable/no_search_results_placeholder"
             />
         <TextView
+            android:visibility="gone"
             android:id="@+id/error_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,5 +27,14 @@
             android:textColor="?attr/colorOnPrimary"
             android:layout_marginTop="@dimen/extra_large_margin"
             android:text="@string/your_mediateka_is_empty"
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/track_list_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            tools:listitem="@layout/track_item_view"
+            tools:itemCount="3"
+            android:layout_weight="1"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             />
 </LinearLayout>

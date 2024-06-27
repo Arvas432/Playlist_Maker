@@ -3,6 +3,7 @@ package com.example.playlistmaker.domain.search.impl
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.search.models.Track
+import kotlinx.coroutines.flow.Flow
 
 class SearchHistoryInteractorImpl(private val repository: SearchHistoryRepository): SearchHistoryInteractor {
     override fun write(input: Track) {
@@ -13,7 +14,7 @@ class SearchHistoryInteractorImpl(private val repository: SearchHistoryRepositor
         repository.clear()
     }
 
-    override fun read(): List<Track> {
+    override fun read(): Flow<List<Track>> {
         return repository.read()
     }
 }
