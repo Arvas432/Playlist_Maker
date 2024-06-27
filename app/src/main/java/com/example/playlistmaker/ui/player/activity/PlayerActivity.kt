@@ -45,6 +45,7 @@ class PlayerActivity : AppCompatActivity() {
         if(track.collectionName.isEmpty()){
             binding.albumInfoTv.isVisible = false
             binding.albumHeaderTv.isVisible = false
+
         }
         else{
             binding.albumInfoTv.text = track.collectionName
@@ -72,13 +73,18 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onPause() {
         super.onPause()
         viewModel.pausePlayer()
     }
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.releasePlayer()
+        if (!isChangingConfigurations) {
+            viewModel.releasePlayer()
+        } else{
+            viewModel.beforeScreenRotate()
+        }
     }
     companion object{
         const val TRACK_PLAYER_KEY = "TRACK_PLAYER_KEY"
