@@ -99,15 +99,15 @@
         android:layout_marginTop="30dp"
         android:src="@drawable/play_button"
         android:background="@null"
-        app:layout_constraintEnd_toStartOf="@+id/appCompatImageButton"
+        app:layout_constraintEnd_toStartOf="@+id/favorites_btn"
         app:layout_constraintStart_toEndOf="@+id/add_to_playlist_btn"
         app:layout_constraintTop_toBottomOf="@id/track_author_tv" />
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/appCompatImageButton"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/favorites_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="54dp"
-        android:background="@drawable/add_to_favorites_button"
+        android:src="@drawable/add_to_favorites_button_unpressed"
         app:layout_constraintEnd_toEndOf="@id/end_buttons_gl"
         app:layout_constraintTop_toBottomOf="@id/track_author_tv" />
 

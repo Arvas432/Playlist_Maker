@@ -9,6 +9,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.ui.player.PlayerFavoriteStatusState
 import com.example.playlistmaker.ui.player.PlayerState
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.google.gson.Gson
@@ -23,13 +24,25 @@ class PlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
         val track = Gson().fromJson(intent.getStringExtra(TRACK_PLAYER_KEY), Track::class.java)
         Log.i("Player", track.trackName)
-        viewModel.preparePlayer(track)
         viewModel.getScreenStateLiveData().observe(this){
             renderState(it)
+            Log.i("STATE", it.toString())
+        }
+        viewModel.getFavoriteStateLiveData().observe(this){
+            if(it is PlayerFavoriteStatusState.FavoriteState){
+                if(it.isFavorite){
+                    binding.favoritesBtn.setImageResource(R.drawable.add_to_favorites_button_pressed)
+                }else{
+                    binding.favoritesBtn.setImageResource(R.drawable.add_to_favorites_button_unpressed)
+                }
+            }
         }
         viewModel.getCurrentPositionLiveData().observe(this){
             binding.trackDurationTv.text = it
         }
+        viewModel.preparePlayer(track)
+        viewModel.requestFavoriteStatus()
+        viewModel.requestPlayerStatusUpdate()
         Glide.with(this)
             .load(track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg"))
             .placeholder(R.drawable.placeholder)
@@ -38,8 +51,9 @@ class PlayerActivity : AppCompatActivity() {
             .into(binding.trackImageIv)
         binding.trackTitleTv.text = track.trackName
         binding.trackAuthorTv.text = track.artistName
-        binding.durationInfoTv.text = track.trackTimeMillis
+        binding.durationInfoTv.text = track.formattedDuration
         binding.playBtn.setOnClickListener {
+            Log.i("BUTTON", "play button clicked")
             viewModel.playbackControl()
         }
         if(track.collectionName.isEmpty()){
@@ -53,6 +67,9 @@ class PlayerActivity : AppCompatActivity() {
         binding.yearInfoTv.text = track.releaseDate.substring(0, track.releaseDate.indexOf('-'))
         binding.genreInfoTv.text = track.primaryGenreName
         binding.countryInfoTv.text = track.country
+        binding.favoritesBtn.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
         binding.backBtn.setOnClickListener {
             finish()
         }
@@ -70,21 +87,24 @@ class PlayerActivity : AppCompatActivity() {
             is PlayerState.Paused ->{
                 binding.playBtn.setImageResource(R.drawable.play_button)
             }
+
         }
     }
 
 
     override fun onPause() {
-        super.onPause()
         viewModel.pausePlayer()
+        super.onPause()
+
     }
     override fun onDestroy() {
-        super.onDestroy()
         if (!isChangingConfigurations) {
             viewModel.releasePlayer()
         } else{
+            viewModel.pausePlayer()
             viewModel.beforeScreenRotate()
         }
+        super.onDestroy()
     }
     companion object{
         const val TRACK_PLAYER_KEY = "TRACK_PLAYER_KEY"

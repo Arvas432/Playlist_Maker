@@ -10,4 +10,5 @@
     <color name="icons_tint_color">#AEAFB4</color>
     <color name="clear_button_color">#AEAFB4</color>
     <color name="yp_yellow">#FCD452</color>
+    <color name="favorites_red">#F56B6C</color>
 </resources>

@@ -19,6 +19,6 @@ class TrackViewHolder(private val binding: TrackItemViewBinding): RecyclerView.V
             .transform(RoundedCorners(itemView.context.resources.getDimensionPixelSize(R.dimen.track_image_rounding)))
             .into(binding.trackImageIv)
         binding.trackAuthor.text = model.artistName.trim()
-        binding.trackDuration.text = model.trackTimeMillis
+        binding.trackDuration.text = model.formattedDuration
     }
 }
