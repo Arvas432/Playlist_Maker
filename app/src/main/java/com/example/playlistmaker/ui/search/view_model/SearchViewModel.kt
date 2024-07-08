@@ -19,6 +19,7 @@ class SearchViewModel(
     private var screenStateLiveData = MutableLiveData<SearchState>(SearchState.Default)
     private var searchData: String = SEARCH_DEF
     private var lastSearch: String = SEARCH_DEF
+    private var currentSearchHistory = mutableListOf<Track>()
     private var searchJob: Job? = null
     fun searchDebounce() {
         searchJob?.cancel()
@@ -34,17 +35,25 @@ class SearchViewModel(
     fun getScreenStateLiveData(): LiveData<SearchState> = screenStateLiveData
 
     fun clearHistory(){
+        currentSearchHistory.clear()
         searchHistoryInteractor.clear()
         renderState(SearchState.Default)
     }
     fun showHistory(){
         searchJob?.cancel()
-        val history = searchHistoryInteractor.read()
-        if(history.isNotEmpty()){
-            renderState(SearchState.SearchHistory(history))
-        }else{
-            renderState(SearchState.Default)
+        viewModelScope.launch {
+            searchHistoryInteractor.read().collect { history ->
+                if(history.isNotEmpty()){
+                    currentSearchHistory.clear()
+                    currentSearchHistory.addAll(history)
+                    renderState(SearchState.SearchHistory(currentSearchHistory))
+                }else{
+                    currentSearchHistory.clear()
+                    renderState(SearchState.Default)
+                }
+            }
         }
+
     }
     fun writeToHistory(input: Track){
         searchHistoryInteractor.write(input)

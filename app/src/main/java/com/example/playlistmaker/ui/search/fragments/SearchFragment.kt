@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.search.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,6 +61,16 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
         binding.searchFieldEdittext.setText(viewModel.getSearchData())
         setUpAdapters()
         setUpActionListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("LIFECYCLE", "ONRESUME")
+        if(binding.searchFieldEdittext.text.isEmpty()){
+            viewModel.showHistory()
+        } else{
+            viewModel.immediateSearch()
+        }
     }
 
     private fun setUpAdapters() {
@@ -147,7 +158,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
         setDefaultScreenState()
         binding.searchPb.isVisible = true
     }
-
     private fun setEmptyResultsScreenState() {
         setDefaultScreenState()
         binding.refreshButton.isVisible = true
