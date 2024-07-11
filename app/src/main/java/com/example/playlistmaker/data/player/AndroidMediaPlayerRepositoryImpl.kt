@@ -22,6 +22,10 @@ class AndroidMediaPlayerRepositoryImpl(private var mediaPlayer: MediaPlayer): Me
         playerState = PLAYER_STATE_PAUSED
     }
     override fun releasePlayer(){
+        if (mediaPlayer.isPlaying){
+            mediaPlayer.stop()
+        }
+        mediaPlayer.reset()
         mediaPlayer.release()
     }
     override fun getPosition(): Int{

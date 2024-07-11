@@ -1,11 +1,13 @@
 package com.example.playlistmaker.di
 
+import android.content.ContentResolver
 import android.content.Context
 import android.media.MediaPlayer
+import android.os.Environment
 import androidx.room.Room
-import androidx.room.migration.Migration
 import com.example.playlistmaker.data.db.AppDatabase
-import com.example.playlistmaker.data.favorites.FavoritesRepositoryImpl
+import com.example.playlistmaker.data.playlists.local.PlaylistImageStorageHandler
+import com.example.playlistmaker.data.playlists.local.PlaylistImageStorageHandlerImpl
 import com.example.playlistmaker.data.search.LocalTrackStorageHandler
 import com.example.playlistmaker.data.search.impl.SharedPreferencesLocalTrackStorageHandler
 import com.example.playlistmaker.data.search.network.ITunesApi
@@ -13,23 +15,37 @@ import com.example.playlistmaker.data.search.network.NetworkClient
 import com.example.playlistmaker.data.search.network.impl.RetrofitNetworkClient
 import com.example.playlistmaker.data.settings.impl.ThemeSwitcher
 import com.example.playlistmaker.data.settings.impl.ThemeSwitcherImpl
-import com.example.playlistmaker.domain.favorites.FavoritesRepository
 import com.example.playlistmaker.utils.TrackMapper
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 
 val dataModule = module{
     val iTunesBaseUrl = "https://itunes.apple.com"
     val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
+    val appPrivateStorageDirectory = "playlistMakerStorage"
     single<ITunesApi>{
         Retrofit.Builder()
             .baseUrl(iTunesBaseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ITunesApi::class.java)
+    }
+    single<File> {
+        val filePath = File(androidContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), appPrivateStorageDirectory)
+        if (!filePath.exists()){
+            filePath.mkdirs()
+        }
+        filePath
+    }
+    single<ContentResolver> {
+        androidContext().contentResolver
+    }
+    single<PlaylistImageStorageHandler>{
+        PlaylistImageStorageHandlerImpl(get(), get())
     }
     single{
         androidContext().getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, Context.MODE_PRIVATE)
@@ -55,8 +71,5 @@ val dataModule = module{
     }
     single{
         TrackMapper()
-    }
-    single<FavoritesRepository> {
-        FavoritesRepositoryImpl(get(), get())
     }
 }

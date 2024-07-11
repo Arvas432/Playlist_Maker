@@ -114,7 +114,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:lineHeight="22sp"
-            android:textAppearance="@style/error_message"
+            android:textAppearance="@style/medium_onprimary_19"
             android:textColor="?attr/colorOnPrimary"
             android:layout_marginTop="@dimen/extra_large_margin"
             android:text="@string/connection_problem"

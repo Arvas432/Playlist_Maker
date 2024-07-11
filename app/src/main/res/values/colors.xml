@@ -11,4 +11,5 @@
     <color name="clear_button_color">#AEAFB4</color>
     <color name="yp_yellow">#FCD452</color>
     <color name="favorites_red">#F56B6C</color>
+    <color name="gray_white_theme_dependent">#E6E8EB</color>
 </resources>
