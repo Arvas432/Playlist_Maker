@@ -6,7 +6,7 @@ data class Playlist(
     val name: String,
     val description: String,
     val imageFileUri: Uri?,
-    val trackList: MutableList<Int> = mutableListOf(),
+    val trackList: List<Int> = emptyList(),
     var trackCount: Int,
     val id: Long? = null
 )

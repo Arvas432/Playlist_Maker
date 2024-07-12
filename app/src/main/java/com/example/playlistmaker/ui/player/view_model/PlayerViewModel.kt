@@ -39,7 +39,7 @@ class PlayerViewModel(
     fun getPlaylistSheetLiveData(): LiveData<PlaylistSheetState> = playlistSheetStateLiveData
     fun preparePlayer(track: Track) {
         Log.i("PREPARING PLAYER", changingScreenOrientation.toString())
-        if (!changingScreenOrientation && (playerInteractor.getPlayerState() != AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PAUSED || playerInteractor.getPlayerState() != AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PLAYING)) {
+        if (!changingScreenOrientation && (playerInteractor.getPlayerState() != AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PAUSED || playerInteractor.getPlayerState() != AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PLAYING || playerInteractor.getPlayerState() != AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PREPARED)) {
             currentTrack = track
             playerInteractor.preparePlayer(
                 track.previewUrl
@@ -82,7 +82,9 @@ class PlayerViewModel(
                 playlistSheetStateLiveData.postValue(PlaylistSheetState.TrackAlreadyAdded(playlist.name))
             } else{
                 playlistsInteractor.addTrackToPlaylist(track, playlist).collect{
-                    playlistSheetStateLiveData.postValue(PlaylistSheetState.TrackAdded(playlist.name))
+                    if(it){
+                        playlistSheetStateLiveData.postValue(PlaylistSheetState.TrackAdded(playlist.name))
+                    }
                 }
             }
         }

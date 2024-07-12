@@ -5,7 +5,6 @@ import com.example.playlistmaker.data.db.entity.PlaylistEntity
 import com.example.playlistmaker.data.playlists.local.PlaylistImageStorageHandler
 import com.example.playlistmaker.domain.playlists.PlaylistsRepository
 import com.example.playlistmaker.domain.playlists.models.Playlist
-import com.example.playlistmaker.domain.playlists.models.PlaylistAdditionResultType
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.utils.TrackMapper
 import com.google.gson.Gson
@@ -73,12 +72,14 @@ class PlaylistsRepositoryImpl(
     override suspend fun addTrackToPlaylist(
         track: Track,
         playlist: Playlist
-    ): Flow<PlaylistAdditionResultType>  = flow{
-        playlist.trackList.add(track.trackId)
-        playlist.trackCount = playlist.trackList.size
+    ): Flow<Boolean>  = flow{
+        val newPlaylist = playlist.copy(
+            trackList = playlist.trackList + track.trackId,
+            trackCount = playlist.trackCount + 1
+        )
         addTrack(track)
-        updatePlaylist(playlist)
-        emit(PlaylistAdditionResultType.SUCCESS)
+        updatePlaylist(newPlaylist)
+        emit(true)
     }
 
     private suspend fun convertEntityList(entities: List<PlaylistEntity>): List<Playlist> {

@@ -3,7 +3,6 @@ package com.example.playlistmaker.di
 import android.content.ContentResolver
 import android.content.Context
 import android.media.MediaPlayer
-import android.os.Environment
 import androidx.room.Room
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.playlists.local.PlaylistImageStorageHandler
@@ -21,12 +20,10 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.File
 
 val dataModule = module{
     val iTunesBaseUrl = "https://itunes.apple.com"
     val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
-    val appPrivateStorageDirectory = "playlistMakerStorage"
     single<ITunesApi>{
         Retrofit.Builder()
             .baseUrl(iTunesBaseUrl)
@@ -34,18 +31,11 @@ val dataModule = module{
             .build()
             .create(ITunesApi::class.java)
     }
-    single<File> {
-        val filePath = File(androidContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), appPrivateStorageDirectory)
-        if (!filePath.exists()){
-            filePath.mkdirs()
-        }
-        filePath
-    }
     single<ContentResolver> {
         androidContext().contentResolver
     }
     single<PlaylistImageStorageHandler>{
-        PlaylistImageStorageHandlerImpl(get(), get())
+        PlaylistImageStorageHandlerImpl(get(), androidContext())
     }
     single{
         androidContext().getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, Context.MODE_PRIVATE)

@@ -29,6 +29,9 @@ class PlaylistCreationViewModel(private var interactor: PlaylistsInteractor):Vie
             }
         }
     }
+    fun requestUri(): Uri?{
+        return playlistImageUri
+    }
     fun checkUnsavedChanges(): Boolean{
         return playlistName.isNotBlank() || playlistDescription.isNotBlank() || playlistImageUri!=null
     }

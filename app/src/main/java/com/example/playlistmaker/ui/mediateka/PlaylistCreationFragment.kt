@@ -44,6 +44,12 @@ class PlaylistCreationFragment : BindingFragment<FragmentPlaylistCreationBinding
                 viewModel.setDescription(charSequence.toString())
             }
         )
+        val imageUri = viewModel.requestUri()
+        if(imageUri!=null){
+            binding.playlistImageIv.setImageURI(imageUri)
+        } else{
+            binding.playlistImageIv.setImageResource(R.drawable.image_picker_background)
+        }
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {

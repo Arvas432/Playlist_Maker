@@ -3,6 +3,7 @@ package com.example.playlistmaker.utils
 import android.content.Context
 import com.example.playlistmaker.R
 
+//Я попробовал использовать вместо этого plurals, но приложение использует английскую локаль и числа 2 - 4 форматируются неправильно, как менять локаль внутри самого приложения я не нашел, оставляю пока так
 class TrackCountFormatter(val context: Context) {
     fun formatTrackCount(trackCount: Int): String {
         val remainder10 = trackCount % 10

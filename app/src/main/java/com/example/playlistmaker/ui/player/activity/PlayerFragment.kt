@@ -156,10 +156,6 @@ class PlayerFragment: BindingFragment<FragmentPlayerBinding>() {
                 name
             ))
     }
-    override fun onPause() {
-        viewModel.pausePlayer()
-        super.onPause()
-    }
 
     override fun onResume() {
         super.onResume()
@@ -178,7 +174,6 @@ class PlayerFragment: BindingFragment<FragmentPlayerBinding>() {
     }
     override fun onDestroy() {
         if (changingConfiguration) {
-            viewModel.pausePlayer()
             viewModel.beforeScreenRotate()
         }
         super.onDestroy()
