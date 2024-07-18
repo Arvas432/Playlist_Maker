@@ -55,7 +55,7 @@ class FavoritesFragment : BindingFragment<FragmentFavoritesBinding>() {
             run {
                 if (clickDebounce()) {
                     findNavController().navigate(
-                        R.id.action_mediatekaFragment_to_playerActivity,
+                        R.id.action_mediatekaFragment_to_playerFragment,
                         bundleOf(SearchFragment.TRACK_PLAYER_KEY to Gson().toJson(track))
                     )
                 }
@@ -71,6 +71,11 @@ class FavoritesFragment : BindingFragment<FragmentFavoritesBinding>() {
         super.onResume()
         favoritesViewModel.getFavorites()
     }
+    override fun onPause() {
+        super.onPause()
+        clickAllowed = true
+    }
+
     private fun renderState(state: FavoritesState){
         when(state){
             is FavoritesState.Default -> Unit

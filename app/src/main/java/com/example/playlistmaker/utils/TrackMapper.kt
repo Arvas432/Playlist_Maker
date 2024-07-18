@@ -1,5 +1,6 @@
 package com.example.playlistmaker.utils
 
+import com.example.playlistmaker.data.db.entity.PlaylistsTrackPoolEntity
 import com.example.playlistmaker.data.db.entity.TrackEntity
 import com.example.playlistmaker.data.search.dto.TrackDto
 import com.example.playlistmaker.domain.search.models.Track
@@ -28,7 +29,7 @@ class TrackMapper {
             track.trackId,
             track.trackName,
             track.artistName,
-            milisecondsFromDate(track.formattedDuration),
+            track.formattedDuration,
             track.artworkUrl100,
             track.collectionName,
             track.releaseDate,
@@ -42,7 +43,7 @@ class TrackMapper {
              entity.trackId,
              entity.trackName.orEmpty(),
              entity.artistName.orEmpty(),
-             dateFormat.format(entity.trackTimeMillis),
+             entity.trackTimeMillis.orEmpty(),
              entity.artworkUrl100.orEmpty(),
              entity.collectionName.orEmpty(),
              entity.releaseDate.orEmpty(),
@@ -51,12 +52,32 @@ class TrackMapper {
              entity.previewUrl.orEmpty()
          )
     }
-    fun milisecondsFromDate(formattedDuration: String): Long? {
-        return try {
-            val date = dateFormat.parse(formattedDuration)
-            date.time
-        } catch (e: Exception){
-            null
-        }
+    fun mapTrackPoolEntityToModel(entity: PlaylistsTrackPoolEntity): Track{
+        return Track(
+            entity.trackId,
+            entity.trackName.orEmpty(),
+            entity.artistName.orEmpty(),
+            entity.trackTimeMillis.orEmpty(),
+            entity.artworkUrl100.orEmpty(),
+            entity.collectionName.orEmpty(),
+            entity.releaseDate.orEmpty(),
+            entity.primaryGenreName.orEmpty(),
+            entity.country.orEmpty(),
+            entity.previewUrl.orEmpty()
+        )
+    }
+    fun mapModelToTrackPoolEntity(track: Track): PlaylistsTrackPoolEntity{
+        return PlaylistsTrackPoolEntity(
+            track.trackId,
+            track.trackName,
+            track.artistName,
+            track.formattedDuration,
+            track.artworkUrl100,
+            track.collectionName,
+            track.releaseDate,
+            track.primaryGenreName,
+            track.country,
+            track.previewUrl
+        )
     }
 }

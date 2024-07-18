@@ -8,20 +8,27 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.data.player.AndroidMediaPlayerRepositoryImpl
 import com.example.playlistmaker.domain.favorites.FavoritesInteractor
 import com.example.playlistmaker.domain.player.PlayerInteractor
+import com.example.playlistmaker.domain.playlists.PlaylistsInteractor
+import com.example.playlistmaker.domain.playlists.models.Playlist
 import com.example.playlistmaker.domain.search.models.Track
-import com.example.playlistmaker.ui.player.PlayerFavoriteStatusState
-import com.example.playlistmaker.ui.player.PlayerState
+import com.example.playlistmaker.ui.player.states.PlayerFavoriteStatusState
+import com.example.playlistmaker.ui.player.states.PlayerState
+import com.example.playlistmaker.ui.player.states.PlaylistSheetState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
-    private val favoritesInteractor: FavoritesInteractor
+    private val favoritesInteractor: FavoritesInteractor,
+    private val playlistsInteractor: PlaylistsInteractor
 ) : ViewModel() {
     private var screenStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
     private var currentPositionLiveData = MutableLiveData<String>()
-    private var favoriteStateLiveData = MutableLiveData<PlayerFavoriteStatusState>(PlayerFavoriteStatusState.Default)
+    private var favoriteStateLiveData =
+        MutableLiveData<PlayerFavoriteStatusState>(PlayerFavoriteStatusState.Default)
+    private var playlistSheetStateLiveData =
+        MutableLiveData<PlaylistSheetState>(PlaylistSheetState.Default)
     private var timerJob: Job? = null
     private lateinit var currentTrack: Track
     private var changingScreenOrientation = false
@@ -29,9 +36,10 @@ class PlayerViewModel(
     fun getScreenStateLiveData(): LiveData<PlayerState> = screenStateLiveData
     fun getFavoriteStateLiveData(): LiveData<PlayerFavoriteStatusState> = favoriteStateLiveData
     fun getCurrentPositionLiveData(): LiveData<String> = currentPositionLiveData
+    fun getPlaylistSheetLiveData(): LiveData<PlaylistSheetState> = playlistSheetStateLiveData
     fun preparePlayer(track: Track) {
         Log.i("PREPARING PLAYER", changingScreenOrientation.toString())
-        if (!changingScreenOrientation) {
+        if (!changingScreenOrientation && (playerInteractor.getPlayerState() != AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PAUSED || playerInteractor.getPlayerState() != AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PLAYING || playerInteractor.getPlayerState() != AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PREPARED)) {
             currentTrack = track
             playerInteractor.preparePlayer(
                 track.previewUrl
@@ -48,22 +56,48 @@ class PlayerViewModel(
 
     private fun startPlayer() {
         Log.i("VIEWMODEL", "START PLAYER CALLED")
-        playerInteractor.play()
-        renderState(PlayerState.Playing)
-        timerJob = viewModelScope.launch {
-            while (playerInteractor.getPlayerState() == AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PLAYING) {
-                delay(TIMER_DELAY)
-                currentPositionLiveData.postValue(playerInteractor.getCurrentPosFormatted())
+        if (playerInteractor.getPlayerState() != AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_DEFAULT) {
+            playerInteractor.play()
+            renderState(PlayerState.Playing)
+            timerJob = viewModelScope.launch {
+                while (playerInteractor.getPlayerState() == AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PLAYING) {
+                    delay(TIMER_DELAY)
+                    currentPositionLiveData.postValue(playerInteractor.getCurrentPosFormatted())
+                }
+            }
+        }
+
+    }
+
+    fun requestPlaylists() {
+        viewModelScope.launch {
+            playlistsInteractor.getAllPlaylists().collect {
+                playlistSheetStateLiveData.postValue(PlaylistSheetState.Content(it))
             }
         }
     }
-    fun requestPlayerStatusUpdate(){
+    fun addTrackToPlaylist(playlist: Playlist, track: Track){
+        viewModelScope.launch {
+            if (playlist.trackList.contains(track.trackId)){
+                playlistSheetStateLiveData.postValue(PlaylistSheetState.TrackAlreadyAdded(playlist.name))
+            } else{
+                playlistsInteractor.addTrackToPlaylist(track, playlist).collect{
+                    if(it){
+                        playlistSheetStateLiveData.postValue(PlaylistSheetState.TrackAdded(playlist.name))
+                    }
+                }
+            }
+        }
+    }
+
+    fun requestPlayerStatusUpdate() {
         when (playerInteractor.getPlayerState()) {
             AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PAUSED -> renderState(PlayerState.Paused)
             AndroidMediaPlayerRepositoryImpl.PLAYER_STATE_PLAYING -> renderState(PlayerState.Playing)
             else -> Unit
         }
     }
+
     fun onFavoriteClicked() {
         if (currentTrack.isFavorite) {
             viewModelScope.launch {
@@ -81,7 +115,8 @@ class PlayerViewModel(
     fun beforeScreenRotate() {
         changingScreenOrientation = true
     }
-    fun requestFavoriteStatus(){
+
+    fun requestFavoriteStatus() {
         favoriteStateLiveData.postValue(PlayerFavoriteStatusState.FavoriteState(currentTrack.isFavorite))
     }
 
@@ -105,12 +140,18 @@ class PlayerViewModel(
     }
 
     fun releasePlayer() {
+        Log.i("Player", "Released")
         playerInteractor.releasePlayer()
     }
 
     private fun renderState(state: PlayerState) {
         Log.i("VIEWMODEL", "rendering state ${state.toString()}")
         screenStateLiveData.postValue(state)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        releasePlayer()
     }
 
     companion object {

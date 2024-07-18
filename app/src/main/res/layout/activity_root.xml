@@ -20,6 +20,7 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
+        android:elevation="0dp"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="?attr/colorPrimary"
@@ -35,7 +36,25 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-
         app:menu="@menu/bottom_navigation_menu" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fake_toast_tv"
+        android:visibility="gone"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:elevation="10dp"
+        android:outlineProvider="none"
+        android:gravity="center"
+        android:textColor="?attr/colorPrimary"
+        android:fontFamily="@font/ys_display_regular"
+        android:textSize="14sp"
+        app:lineHeight="16sp"
+        tools:text="Плейлист BeSt SoNg EvEr! создан"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="?attr/colorOnPrimary"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,9 +6,12 @@
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/yp_black</item>
         <item name="colorOnSecondary">@color/white</item>
+        <item name="colorTertiary">@color/white</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:navigationBarColor">?attr/colorPrimary</item>
         <item name="colorAccent">@color/main_blue</item>
         <item name="colorSwitchThumbNormal">@color/main_blue</item>
         <item name="colorSurface">@color/yp_blue_light</item>
+
     </style>
 </resources>

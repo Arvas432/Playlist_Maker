@@ -48,6 +48,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
             viewLifecycleOwner.lifecycleScope.launch {
                 delay(CLICK_DEBOUNCE_DELAY)
                 clickAllowed = true
+                Log.i("DEBOUNCE", "CLICK ALLOWED")
             }
         }
         return current
@@ -73,13 +74,17 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        clickAllowed = true
+    }
     private fun setUpAdapters() {
         onTrackClickDebounce = { track ->
             run {
                 if (clickDebounce()) {
                     viewModel.writeToHistory(track)
                     findNavController().navigate(
-                        R.id.action_searchFragment_to_playerActivity,
+                        R.id.action_searchFragment_to_playerFragment,
                         bundleOf(TRACK_PLAYER_KEY to Gson().toJson(track))
                     )
                 }
@@ -160,7 +165,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
     }
     private fun setEmptyResultsScreenState() {
         setDefaultScreenState()
-        binding.refreshButton.isVisible = true
+        binding.refreshButton.isVisible = false
         binding.errorPlaceholderLayout.isVisible = true
         binding.errorText.isVisible = true
         binding.errorPlaceholderImage.isVisible = true
