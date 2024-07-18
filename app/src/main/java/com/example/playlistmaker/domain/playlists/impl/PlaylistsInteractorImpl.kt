@@ -20,8 +20,20 @@ class PlaylistsInteractorImpl(private val repository: PlaylistsRepository):Playl
         return repository.getAllPlaylists().map { list -> list.reversed() }
     }
 
-    override fun getTracksFromListIds(ids: List<Int>): Flow<List<Track>> {
-        return repository.getTracksFromListIds(ids)
+    override fun getPlaylistById(id: Long): Flow<Playlist> {
+        return repository.getPlaylistById(id)
+    }
+
+    override fun getTracksByPlaylistId(id: Long): Flow<List<Track>> {
+        return repository.getTracksByPlaylistId(id).map { list -> list.reversed() }
+    }
+
+    override suspend fun deletePlaylist(playlistId: Long) {
+        repository.deletePlaylistAndTracks(playlistId)
+    }
+
+    override suspend fun removeTrackFromPlaylist(playlistId: Long, trackId: Int) {
+        repository.removeTrackFromPlaylist(playlistId, trackId)
     }
 
     override suspend fun addTrack(track: Track) {

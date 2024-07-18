@@ -8,8 +8,6 @@ data class PlaylistEntity(
     val name: String,
     val description: String,
     val imageFilePath: String?,
-    val serializedTrackList: String,
-    val trackCount: Int,
     @PrimaryKey(autoGenerate = true)
     val playlistId: Long = 0L,
 )

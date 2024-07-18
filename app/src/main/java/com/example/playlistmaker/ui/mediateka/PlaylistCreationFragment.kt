@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.mediateka
 import android.app.AlertDialog
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,14 +19,14 @@ import com.example.playlistmaker.utils.BindingFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class PlaylistCreationFragment : BindingFragment<FragmentPlaylistCreationBinding>() {
+open class PlaylistCreationFragment : BindingFragment<FragmentPlaylistCreationBinding>() {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
     ): FragmentPlaylistCreationBinding {
         return FragmentPlaylistCreationBinding.inflate(inflater, container, false)
     }
-    private val viewModel by viewModel<PlaylistCreationViewModel>()
+    protected open val viewModel by viewModel<PlaylistCreationViewModel>()
     private var playlistName = ""
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,39 +53,45 @@ class PlaylistCreationFragment : BindingFragment<FragmentPlaylistCreationBinding
         }
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-                if (uri != null) {
-                    binding.playlistImageIv.setImageURI(uri)
-                    viewModel.setUri(uri)
-                } else {
-                    Log.d("PhotoPicker", "No media selected")
-                    binding.playlistImageIv.setImageResource(R.drawable.image_picker_background)
-                }
+               handleUriChange(uri)
             }
         binding.playlistImageIv.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
         binding.createPlaylistBtn.setOnClickListener {
-            viewModel.createPlaylist()
-            showCustomToast(playlistName)
-            findNavController().popBackStack()
+            createButtonFunction()
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner){
             handleBackPress()
+        }
+    }
+    protected open fun createButtonFunction(){
+        viewModel.finalizePlaylistAction()
+        showCustomToast(playlistName)
+        findNavController().popBackStack()
+    }
+    protected open fun handleUriChange(uri: Uri?){
+        if (uri != null) {
+            binding.playlistImageIv.setImageURI(uri)
+            viewModel.setUri(uri)
+        } else {
+            Log.d("PhotoPicker", "No media selected")
+            binding.playlistImageIv.setImageResource(R.drawable.image_picker_background)
         }
     }
     private fun showDialog(){
         AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
             .setTitle(getString(R.string.exit_playlist_creation))
             .setMessage(getString(R.string.all_unsaved_changes_will_be_lost))
-            .setNeutralButton("Отмена"){ dialog, which ->
+            .setNeutralButton(getString(R.string.cancel)){ dialog, which ->
                 dialog.dismiss()
             }
-            .setPositiveButton("Завершить"){ dialog, which ->
+            .setPositiveButton(getString(R.string.finish)){ dialog, which ->
                 dialog.dismiss()
                 findNavController().popBackStack()
             }.show()
     }
-    private fun handleBackPress(){
+    protected open fun handleBackPress(){
         if (viewModel.checkUnsavedChanges()){
             showDialog()
         } else{

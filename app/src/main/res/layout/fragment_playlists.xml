@@ -15,6 +15,7 @@
         android:text="@string/new_playlist" />
     <ImageView
         tools:visibility="gone"
+        android:visibility="gone"
         android:id="@+id/error_placeholder_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,6 +25,7 @@
         />
     <TextView
         tools:visibility="gone"
+        android:visibility="gone"
         android:id="@+id/error_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

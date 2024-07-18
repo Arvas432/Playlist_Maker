@@ -13,7 +13,6 @@ class SettingsViewModel(
     private val settingsInteractor: SettingsInteractor) :ViewModel(){
     private var screenStateLiveData = MutableLiveData<SettingsState>()
     private var isClickAllowed = true
-
     private val handler = Handler(Looper.getMainLooper())
     private fun switchDebounce() : Boolean {
         val current = isClickAllowed
