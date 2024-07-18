@@ -8,7 +8,7 @@ import com.example.playlistmaker.databinding.TrackItemViewBinding
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.ui.search.viewholders.TrackViewHolder
 
-class TrackListAdapter(private val tracks: List<Track>, val itemOnClick: (Track)-> Unit) : RecyclerView.Adapter<TrackViewHolder>() {
+open class TrackListAdapter(protected val tracks: List<Track>, val itemOnClick: (Track)-> Unit) : RecyclerView.Adapter<TrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val layoutInspector = LayoutInflater.from(parent.context)

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -30,7 +31,10 @@ class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
             renderState(it)
         }
         playlistsViewModel.loadPlaylists()
-        adapter = PlaylistGridAdapter(playlists)
+        adapter = PlaylistGridAdapter(playlists){
+            findNavController().navigate(R.id.action_mediatekaFragment_to_playlistInfoFragment, bundleOf(
+                PLAYLIST_ID_KEY to it.id))
+        }
         binding.playlistsRv.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.playlistsRv.adapter = adapter
     }
@@ -72,6 +76,7 @@ class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
 
 
     companion object {
+        const val PLAYLIST_ID_KEY = "playlistidkey"
         @JvmStatic
         fun newInstance() =
             PlaylistsFragment().apply {}

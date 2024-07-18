@@ -8,13 +8,12 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TrackMapper {
-    private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
     fun mapTrackDtoToTrack(dto: TrackDto, favoritesIds: Set<Int>): Track{
         return Track(
             dto.trackId,
             dto.trackName.orEmpty(),
             dto.artistName.orEmpty(),
-            dateFormat.format(dto.trackTimeMillis),
+            dto.trackTimeMillis,
             dto.artworkUrl100.orEmpty(),
             dto.collectionName.orEmpty(),
             dto.releaseDate.orEmpty(),
@@ -29,7 +28,7 @@ class TrackMapper {
             track.trackId,
             track.trackName,
             track.artistName,
-            track.formattedDuration,
+            track.trackTimeMillis,
             track.artworkUrl100,
             track.collectionName,
             track.releaseDate,
@@ -43,7 +42,7 @@ class TrackMapper {
              entity.trackId,
              entity.trackName.orEmpty(),
              entity.artistName.orEmpty(),
-             entity.trackTimeMillis.orEmpty(),
+             entity.trackTimeMillis,
              entity.artworkUrl100.orEmpty(),
              entity.collectionName.orEmpty(),
              entity.releaseDate.orEmpty(),
@@ -52,18 +51,19 @@ class TrackMapper {
              entity.previewUrl.orEmpty()
          )
     }
-    fun mapTrackPoolEntityToModel(entity: PlaylistsTrackPoolEntity): Track{
+    fun mapTrackPoolEntityToModel(entity: PlaylistsTrackPoolEntity, favoritesIds: Set<Int>): Track{
         return Track(
             entity.trackId,
             entity.trackName.orEmpty(),
             entity.artistName.orEmpty(),
-            entity.trackTimeMillis.orEmpty(),
+            entity.trackTimeMillis,
             entity.artworkUrl100.orEmpty(),
             entity.collectionName.orEmpty(),
             entity.releaseDate.orEmpty(),
             entity.primaryGenreName.orEmpty(),
             entity.country.orEmpty(),
-            entity.previewUrl.orEmpty()
+            entity.previewUrl.orEmpty(),
+            favoritesIds.contains(entity.trackId)
         )
     }
     fun mapModelToTrackPoolEntity(track: Track): PlaylistsTrackPoolEntity{
@@ -71,7 +71,7 @@ class TrackMapper {
             track.trackId,
             track.trackName,
             track.artistName,
-            track.formattedDuration,
+            track.trackTimeMillis,
             track.artworkUrl100,
             track.collectionName,
             track.releaseDate,

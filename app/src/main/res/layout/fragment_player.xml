@@ -4,12 +4,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.player.activity.PlayerFragment"
+    tools:context=".ui.player.fragments.PlayerFragment"
     android:background="?attr/colorPrimary">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.player.activity.PlayerActivity"
         android:background="?attr/colorPrimary"
         >
         <androidx.constraintlayout.widget.Guideline

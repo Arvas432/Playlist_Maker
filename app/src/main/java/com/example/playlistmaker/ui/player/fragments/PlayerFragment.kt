@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.player.activity
+package com.example.playlistmaker.ui.player.fragments
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -26,6 +26,8 @@ import com.example.playlistmaker.utils.BindingFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class PlayerFragment: BindingFragment<FragmentPlayerBinding>() {
     private val viewModel: PlayerViewModel by viewModel<PlayerViewModel>()
@@ -34,6 +36,7 @@ class PlayerFragment: BindingFragment<FragmentPlayerBinding>() {
     private lateinit var playlistsAdapter: PlaylistSmallAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private var playlists = mutableListOf<Playlist>()
+    private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -85,7 +88,7 @@ class PlayerFragment: BindingFragment<FragmentPlayerBinding>() {
             .into(binding.trackImageIv)
         binding.trackTitleTv.text = track.trackName
         binding.trackAuthorTv.text = track.artistName
-        binding.durationInfoTv.text = track.formattedDuration
+        binding.durationInfoTv.text = dateFormat.format(track.trackTimeMillis)
         binding.playBtn.setOnClickListener {
             Log.i("BUTTON", "play button clicked")
             viewModel.playbackControl()
